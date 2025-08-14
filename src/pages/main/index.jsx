@@ -1,9 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+import Chat from "./Chat";
 function MainPage() {
   return (
     <div className="flex flex-col h-full bg-gray-100">
+      <Chat />
       <div> 메인페이지</div>
     </div>
   );

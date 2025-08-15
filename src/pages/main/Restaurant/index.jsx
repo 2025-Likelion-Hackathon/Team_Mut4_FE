@@ -22,7 +22,11 @@ const index = () => {
   ];
   return (
     <div className="flex flex-col h-full bg-gray-100">
-      <PlacePreview title="현지인 인증 맛집" content={placeContent} />
+      <PlacePreview
+        title="현지인 인증 맛집"
+        content={placeContent}
+        link="/restaurant"
+      />
     </div>
   );
 };

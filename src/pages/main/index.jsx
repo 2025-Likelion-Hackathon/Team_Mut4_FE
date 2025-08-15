@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import Chat from "./Chat";
 import Restaurant from "./Restaurant";
 import Accommodation from "./Accommodation";
+// 메인 페이지 컴포넌트
+
 function MainPage() {
   return (
     <div className="flex flex-col h-full bg-white">

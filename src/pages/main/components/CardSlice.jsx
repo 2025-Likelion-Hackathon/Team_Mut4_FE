@@ -10,8 +10,7 @@ const CardSlice = ({ cards, type = "chat" }) => {
 
   const getSpaceBetween = () => {
     switch (type) {
-      case "restaurant":
-      case "accommodation":
+      case "preview":
         return -230; // 일반적인 간격
       case "chat":
       default:

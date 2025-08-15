@@ -6,8 +6,8 @@ import { Link } from "react-router-dom";
 // location, name, price 등의 props를 받아 해당 정보를 표시합니다.
 const PlaceCard = ({ location, name, price }) => {
   return (
-    <div className="flex flex-col bg-white w-[156px]  h-[156px] gap-[20px] w-[255px] h-[160px] border-[1px] rounded-[8px]  mt-[27px] pt-[13px] pl-[10px]">
-      <div className="flex flex-col gap-[60px] ">
+    <div className="flex flex-col bg-white w-[156px] h-[199px] gap-[20px]  border-[1px] rounded-[8px]  mt-[27px] pt-[13px] pl-[10px]">
+      <div className="flex flex-col gap-[100px] ">
         <div className="flex justify-between pr-2">
           <div>
             <div className="text-[12px]">{location} </div>

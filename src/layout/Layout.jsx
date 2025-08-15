@@ -11,7 +11,7 @@ function Layout() {
     <div className="flex flex-col h-screen">
       {path === "/main" ? <Header /> : null}
       <div
-        className="flex-grow overflow-y-auto p-4 scrollbar-hide"
+        className="flex-grow overflow-y-auto  scrollbar-hide"
         style={{
           height:
             path === "/main"

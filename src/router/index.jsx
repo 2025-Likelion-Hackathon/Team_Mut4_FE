@@ -5,12 +5,12 @@ import Layout from "../layout/Layout";
 
 // Flow Pages
 const LogoPage = lazy(() => import("../pages/logo"));
-const LocationAuthPage = lazy(() => import("../pages/location-auth"));
+const LocationAuthPage = lazy(() => import("../pages/current"));
 
 // Main Page and Features
 const MainPage = lazy(() => import("../pages/main"));
-const TravelRegionPage = lazy(() => import("../pages/travel-region"));
-const AIChatbotPage = lazy(() => import("../pages/ai-chatbot"));
+const TravelRegionPage = lazy(() => import("../pages/travelDestination"));
+const AIChatbotPage = lazy(() => import("../pages/chatbot"));
 const RestaurantPage = lazy(() => import("../pages/restaurant"));
 const AccommodationPage = lazy(() => import("../pages/accommodation"));
 
@@ -45,7 +45,7 @@ const router = createBrowserRouter([
         element: <MainPage />,
       },
       {
-        path: "/region",
+        path: "/destination",
         element: <TravelRegionPage />,
       },
       {

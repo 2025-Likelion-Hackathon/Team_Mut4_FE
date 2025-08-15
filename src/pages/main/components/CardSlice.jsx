@@ -11,7 +11,7 @@ const CardSlice = ({ cards, type = "chat" }) => {
   const getSpaceBetween = () => {
     switch (type) {
       case "preview":
-        return -230; // 일반적인 간격
+        return -240; // 일반적인 간격
       case "chat":
       default:
         return -145; // 겹치는 간격
@@ -28,7 +28,7 @@ const CardSlice = ({ cards, type = "chat" }) => {
         onProgress={(_, progress) => {
           setProgress(progress);
         }}
-        className="w-full h-[190px] "
+        className="w-full h-auto "
       >
         {cards.map((Card, index) => (
           <SwiperSlide key={index} className="w-[255px]">

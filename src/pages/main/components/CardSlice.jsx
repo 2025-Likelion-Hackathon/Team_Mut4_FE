@@ -4,14 +4,26 @@ import { FreeMode } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/free-mode";
 
-const CardSlice = ({ cards }) => {
+//  카드 슬라이스 컴포넌트
+const CardSlice = ({ cards, type = "chat" }) => {
   const [progress, setProgress] = useState(0);
 
+  const getSpaceBetween = () => {
+    switch (type) {
+      case "restaurant":
+      case "accommodation":
+        return -230; // 일반적인 간격
+      case "chat":
+      default:
+        return -145; // 겹치는 간격
+    }
+  };
+
   return (
-    <div className="w-[full] pl-[9px]">
+    <div className="w-[full] ">
       <Swiper
         modules={[FreeMode]}
-        spaceBetween={-145}
+        spaceBetween={getSpaceBetween()}
         slidesPerView="auto"
         freeMode={true}
         onProgress={(_, progress) => {

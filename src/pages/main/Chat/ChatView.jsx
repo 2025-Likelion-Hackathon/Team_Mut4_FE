@@ -2,16 +2,21 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Go from "../../../assets/Go.svg?react";
 
-const ChatView = () => {
+const ChatView = ({ title, link, num }) => {
   return (
-    <div className="flex flex-col gap-[20px] w-[255px] h-[160px] border-[1px] rounded-[8px] ml-[8px] mt-[27px]">
-      <div className="text-[17px] font-medium text-gray-700 p-4">
-        <p>합리적인 여행</p>
-        <p>토박이와 함께해요!</p>
-      </div>
-      <div className="flex justify-end text-[13px] w-full h-[40px]">
-        <Link to="/chatbot" className="flex items-center gap-[4px] p-4">
-          토박이에게 바로가기 <Go />
+    <div className="flex w-[190px] h-[123.52px] border-[1px] rounded-[8px] mt-[27px] p-[10px]">
+      <div className="flex justify-between items-start w-full text-[17px] font-medium text-gray-700">
+        <div className="flex items-start ">
+          <p className="w-[85px]">{title}</p>
+          {num ? (
+            <div className="w-[16px] h-[16px] mt-[5px] text-[12px] flex justify-center items-center rounded-[24px] bg-[#F0F0F0]">
+              {num}
+            </div>
+          ) : null}
+        </div>
+
+        <Link to={link} className="pt-[7px]">
+          <Go />
         </Link>
       </div>
     </div>

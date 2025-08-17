@@ -11,6 +11,9 @@ const LocationAuthPage = lazy(() => import("../pages/current"));
 const MainPage = lazy(() => import("../pages/main"));
 const TravelRegionPage = lazy(() => import("../pages/travelDestination"));
 const AIChatbotPage = lazy(() => import("../pages/chatbot"));
+const AIChatbotHistoryPage = lazy(
+  () => import("../pages/chatbot/chatHistory.jsx")
+);
 const RestaurantPage = lazy(() => import("../pages/restaurant"));
 const AccommodationPage = lazy(() => import("../pages/accommodation"));
 
@@ -51,6 +54,10 @@ const router = createBrowserRouter([
       {
         path: "/chatbot",
         element: <AIChatbotPage />,
+      },
+      {
+        path: "/history",
+        element: <AIChatbotHistoryPage />,
       },
       {
         path: "/restaurant",

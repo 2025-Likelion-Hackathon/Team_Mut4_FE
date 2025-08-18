@@ -1,11 +1,26 @@
 import React from 'react';
+import { Global } from '@emotion/react';
+import RestaurantList from './components/RestaurantList';
+import RestaurantHeader from './components/RestaurantHeader';
+import RestaurantNavigation from './components/RestaurantNavigation';
+
+const globalStyles = `
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+`;
 
 function RestaurantPage() {
   return (
-    <div>
-      <h2>Restaurant</h2>
-      <p>Find the best restaurants around.</p>
-    </div>
+    <>
+      <Global styles={globalStyles} />
+      <RestaurantHeader />
+      <RestaurantNavigation />
+      <RestaurantList />
+    </>
   );
 }
 

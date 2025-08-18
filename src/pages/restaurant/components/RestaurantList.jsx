@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import RestaurantItem from './RestaurantItem';
+import FilterDropdown from './FilterDropdown';
 
 // 더미 데이터
 const dummyRestaurants = [
@@ -58,16 +59,26 @@ const dummyRestaurants = [
 const ListContainer = styled.div`
   padding: 1rem;
   overflow-y: auto;
-  height: calc(100vh - 200px);
+  height: calc(100vh - 250px);
+`;
+
+const FilterContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
 `;
 
 const RestaurantList = () => {
   return (
-    <ListContainer>
-      {dummyRestaurants.map(restaurant => (
-        <RestaurantItem key={restaurant.id} restaurant={restaurant} />
-      ))}
-    </ListContainer>
+    <div>
+        <FilterContainer>
+            <FilterDropdown />
+        </FilterContainer>
+        <ListContainer>
+            {dummyRestaurants.map(restaurant => (
+                <RestaurantItem key={restaurant.id} restaurant={restaurant} />
+            ))}
+        </ListContainer>
+    </div>
   );
 };
 

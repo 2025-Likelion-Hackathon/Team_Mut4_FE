@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import AccommodationItem from './AccommodationItem';
+import FilterDropdown from '../../restaurant/components/FilterDropdown';
 
 // 숙소 더미 데이터
 const dummyAccommodations = [
@@ -30,16 +31,26 @@ const dummyAccommodations = [
 const ListContainer = styled.div`
   padding: 1rem;
   overflow-y: auto;
-  height: calc(100vh - 200px);
+  height: calc(100vh - 250px);
+`;
+
+const FilterContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
 `;
 
 const AccommodationList = () => {
   return (
-    <ListContainer>
-      {dummyAccommodations.map(item => (
-        <AccommodationItem key={item.id} accommodation={item} />
-      ))}
-    </ListContainer>
+    <div>
+        <FilterContainer>
+            <FilterDropdown />
+        </FilterContainer>
+        <ListContainer>
+            {dummyAccommodations.map(item => (
+                <AccommodationItem key={item.id} accommodation={item} />
+            ))}
+        </ListContainer>
+    </div>
   );
 };
 

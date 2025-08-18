@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { useMoreTabStore } from '../../../stores/useMoreTabStore';
 
 const NavContainer = styled.div`
   display: flex;
@@ -20,13 +21,25 @@ const NavButton = styled.button`
   cursor: pointer;
 `;
 
-const RestaurentNavigation = () => {
+const RestaurantNavigation = () => {
+  const { activeTab, setActiveTab } = useMoreTabStore();
+
   return (
     <NavContainer>
-      <NavButton active>음식점</NavButton>
-      <NavButton>숙소</NavButton>
+      <NavButton
+        active={activeTab === 'restaurant'}
+        onClick={() => setActiveTab('restaurant')}
+      >
+        음식점
+      </NavButton>
+      <NavButton
+        active={activeTab === 'accommodation'}
+        onClick={() => setActiveTab('accommodation')}
+      >
+        숙소
+      </NavButton>
     </NavContainer>
   );
 };
 
-export default RestaurentNavigation;
+export default RestaurantNavigation;

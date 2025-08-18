@@ -1,14 +1,14 @@
 import React from 'react';
 import styled from '@emotion/styled';
 
-const ItemContainer = styled.div`
+export const ItemContainer = styled.div`
   display: flex;
   align-items: flex-start;
   padding: 1rem;
   border-bottom: 1px solid #e5e7eb;
 `;
 
-const ImagePlaceholder = styled.div`
+export const ImagePlaceholder = styled.div`
   width: 6rem;
   height: 6rem;
   background-color: #e5e7eb;
@@ -17,30 +17,30 @@ const ImagePlaceholder = styled.div`
   flex-shrink: 0;
 `;
 
-const ContentWrapper = styled.div`
+export const ContentWrapper = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
 `;
 
-const HeaderWrapper = styled.div`
+export const HeaderWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.25rem;
 `;
 
-const RestaurantName = styled.h3`
+export const RestaurantName = styled.h3`
   font-weight: 600;
   font-size: 1.125rem;
 `;
 
-const Checkbox = styled.input`
+export const Checkbox = styled.input`
   width: 1.25rem;
   height: 1.25rem;
 `;
 
-const AddressWrapper = styled.div`
+export const AddressWrapper = styled.div`
   display: flex;
   align-items: center;
   color: #6b7280;
@@ -48,18 +48,18 @@ const AddressWrapper = styled.div`
   margin-bottom: 0.5rem;
 `;
 
-const AddressIcon = styled.svg`
+export const AddressIcon = styled.svg`
   height: 1rem;
   width: 1rem;
   margin-right: 0.25rem;
 `;
 
-const TagsWrapper = styled.div`
+export const TagsWrapper = styled.div`
   display: flex;
   gap: 0.5rem;
 `;
 
-const Tag = styled.span`
+export const Tag = styled.span`
   background-color: #f3f4f6;
   color: #4b5563;
   font-size: 0.875rem;

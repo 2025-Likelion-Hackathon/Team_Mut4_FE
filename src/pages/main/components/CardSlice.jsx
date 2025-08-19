@@ -9,12 +9,20 @@ const CardSlice = ({ cards, type = "chat" }) => {
   const [progress, setProgress] = useState(0);
 
   const getSpaceBetween = () => {
+    const viewportWidth = window.innerWidth;
+
     switch (type) {
       case "preview":
-        return -240; // 일반적인 간격
+        if (viewportWidth >= 420) {
+          return -240; // 420px 이상일 때
+        } else if (viewportWidth >= 390) {
+          return viewportWidth * -0.54; // 390px 이상일 때
+        } else if (viewportWidth <= 375) {
+          return viewportWidth * -0.51; // 375px 이하일 때
+        }
       case "chat":
       default:
-        return -145; // 겹치는 간격
+        return viewportWidth * -0.35; // 화면 너비의 35%
     }
   };
 

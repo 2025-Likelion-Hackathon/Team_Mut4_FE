@@ -14,7 +14,7 @@ const PlacePreview = ({ title, link, content, type = "preview" }) => {
   ));
   console.log("cards", cards);
   return (
-    <div className="flex flex-col  w-full h-auto bg-gray pl-[14px] pt-[22px] pb-[20px]">
+    <div className="flex flex-col w-full h-auto bg-gray-100 pl-[14px] pt-[22px] pb-[20px]">
       <div className="flex justify-between items-center pr-[14px]">
         <div className="font-bold text-[16px]"> {title}</div>
 

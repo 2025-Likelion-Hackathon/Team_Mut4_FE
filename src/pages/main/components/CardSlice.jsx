@@ -19,7 +19,7 @@ const CardSlice = ({ cards, type = "chat" }) => {
   };
 
   return (
-    <div className="w-[full] ">
+    <div className="w-full">
       <Swiper
         modules={[FreeMode]}
         spaceBetween={getSpaceBetween()}

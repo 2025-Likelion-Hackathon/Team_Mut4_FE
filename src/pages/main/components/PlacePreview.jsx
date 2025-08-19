@@ -12,7 +12,7 @@ const PlacePreview = ({ title, link, content, type = "preview" }) => {
   const cards = content.map((item, index) => () => (
     <PlaceCard key={index} {...item} />
   ));
-  console.log("cards", cards);
+
   return (
     <div className="flex flex-col w-full h-auto bg-gray-100 pl-[14px] pt-[22px] pb-[20px]">
       <div className="flex justify-between items-center pr-[14px]">

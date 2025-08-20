@@ -6,6 +6,7 @@ import Layout from "../layout/Layout";
 // Flow Pages
 const LogoPage = lazy(() => import("../pages/logo"));
 const LocationAuthPage = lazy(() => import("../pages/current"));
+const LocationPage = lazy(() => import("../pages/current/location"));
 
 // Main Page and Features
 const MainPage = lazy(() => import("../pages/main"));
@@ -32,6 +33,16 @@ const router = createBrowserRouter([
     element: (
       <Suspense fallback={<Loading />}>
         <LocationAuthPage />
+      </Suspense>
+    ),
+  },
+
+  // Main App Routes (with common Layout)
+  {
+    path: "/location",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <LocationPage />
       </Suspense>
     ),
   },

@@ -6,22 +6,10 @@ export const useLocationStore = create((set) => ({
   address: "",
   userType: "local", // 기본값은 'local'
 
+  //전체 주소 반환하게 변경 ( 시/구/군 반영시 오류 발생 )
   setAddress: (address) => {
-    // "시"가 포함된 단어만 추출하는 함수
-    const extractCityName = (fullAddress) => {
-      if (!fullAddress) return "";
-
-      // 주소를 공백으로 분리하여 배열로 만듦
-      const addressParts = fullAddress.split(" ");
-
-      // "시"로 끝나는 단어를 찾기
-      const cityPart = addressParts.find((part) => part.endsWith("시"));
-
-      return cityPart || fullAddress; // "시"가 포함된 단어가 없으면 원본 주소 반환
-    };
-
-    const cityName = extractCityName(address);
-    set({ address: cityName });
+    if (!address) return;
+    set({ address });
   },
   setLocationId: (locationId) => set({ locationId }),
   setUserType: (userType) => set({ userType }),

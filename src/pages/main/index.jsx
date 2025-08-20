@@ -4,9 +4,14 @@ import Chat from "./Chat";
 import Restaurant from "./Restaurant";
 import Accommodation from "./Accommodation";
 import Pin from "../../assets/General/Location Pin.svg?react";
+
+import { useLocationStore } from "../../stores/uselocationStore";
+
 // 메인 페이지 컴포넌트
 
 function MainPage() {
+  const { userType, locationId, address } = useLocationStore();
+
   return (
     <div className="flex flex-col h-full bg-white">
       <Chat /> {/* Ai 챗봇 대화 기록 연동 필요 */}
@@ -14,7 +19,7 @@ function MainPage() {
         <div className="flex  items-center p-4  gap-[13px]">
           <div className="text-[19px] font-bold ">
             <Pin className="inline-block mr-2" />
-            00 시 {/* 여행지 추천 페이지로 이동 */}
+            {address} {/* 여행지 추천 페이지로 이동 */}
           </div>
           <Link
             to="/destination"

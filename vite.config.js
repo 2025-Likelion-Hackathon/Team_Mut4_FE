@@ -15,21 +15,5 @@ export default defineConfig(({ mode }) => {
         "@": path.resolve(__dirname, "./src"),
       },
     },
-    server: {
-      proxy: {
-        "/api": {
-          target: "http://3.37.136.115:8080",
-          changeOrigin: true,
-          secure: false,
-          rewrite: (path) => path.replace(/^\/api/, "/api"),
-        },
-        "/locations": {
-          target: env.VITE_API_BASE_URL || "http://43.201.141.17:8080",
-          changeOrigin: true,
-          secure: false,
-          rewrite: (path) => path.replace(/^\/locations/, "/locations"),
-        },
-      },
-    },
   };
 });

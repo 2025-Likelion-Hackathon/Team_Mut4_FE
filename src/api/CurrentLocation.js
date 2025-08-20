@@ -6,20 +6,10 @@
  */
 const postCurrentLocation = async (latitude, longitude) => {
   try {
-    // 디버깅: 환경 변수 확인
-    console.log("🔧 환경 변수 확인:", {
-      DEV: import.meta.env.DEV,
-      VITE_API_BASE_URL: import.meta.env.VITE_API_BASE_URL,
-      VITE_LOCATION_API_URL: import.meta.env.VITE_LOCATION_API_URL,
-    });
-
-    // Vite 환경 변수 올바른 사용법
-    const apiUrl = import.meta.env.DEV
-      ? "/locations" // 개발 환경: 프록시 사용
-      : import.meta.env.VITE_LOCATION_API_URL ||
-        `${import.meta.env.VITE_API_BASE_URL}/locations`;
-
-    console.log("📡 API 요청 URL:", apiUrl);
+    // 환경 변수에서 API URL 가져오기
+    const apiUrl =
+      import.meta.env.VITE_LOCATION_API_URL ||
+      `${import.meta.env.VITE_API_BASE_URL}/locations`;
 
     const response = await fetch(apiUrl, {
       method: "POST",
@@ -37,7 +27,7 @@ const postCurrentLocation = async (latitude, longitude) => {
     }
 
     const data = await response.json();
-    console.log("서버 응답:", data);
+
     return {
       success: true,
       data: data,

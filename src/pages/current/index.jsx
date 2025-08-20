@@ -2,13 +2,23 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import GeoLocation from "../../api/GeoLocation"; // 위치 정보를 가져오는 유틸리티 함수
 import postCurrentLocation from "../../api/CurrentLocation"; // 위치 정보를 서버에 전송하는 API
+import { useLocationStore } from "../../stores/uselocationStore"; // Zustand 스토어
 
 function LocationAuthPage() {
   const [location, setLocation] = useState(null);
-  const [userType, setUserType] = useState("local");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [serverResponse, setServerResponse] = useState(null);
+
+  // Zustand 스토어에서 값과 액션 함수 가져오기
+  const {
+    setLocationId,
+    setAddress,
+    locationId,
+    address,
+    userType,
+    setUserType,
+  } = useLocationStore();
 
   // 위치 정보 가져오기 및 서버 전송 함수
   const getCurrentLocation = async () => {
@@ -21,7 +31,6 @@ function LocationAuthPage() {
       // 성공 콜백
       async (locationData) => {
         setLocation(locationData);
-        console.log("위치 정보 저장 완료:", locationData);
 
         // 서버에 위치 정보 전송
         try {
@@ -32,7 +41,15 @@ function LocationAuthPage() {
 
           if (result.success) {
             setServerResponse(result.data);
-            console.log("서버 전송 성공:", result.data);
+
+            // Zustand 스토어에 locationId와 address 저장
+            if (result.data.locationId) {
+              setLocationId(result.data.locationId);
+            }
+
+            if (result.data.address) {
+              setAddress(result.data.address);
+            }
           } else {
             setError(`서버 전송 실패: ${result.error}`);
           }
@@ -82,34 +99,8 @@ function LocationAuthPage() {
         </Link>
         {/* 현재 위치 기반으로 설정 */}
       </div>
-
-      {/* 에러 메시지 표시 */}
       {error && (
-        <div className="px-4 text-center">
-          <p className="text-red-500">오류: {error}</p>
-        </div>
-      )}
-
-      {/* 위치 정보 표시 */}
-      {location && (
-        <div className="px-4 text-center">
-          <p className="text-green-600">
-            현재 위치: 위도 {location.latitude}, 경도 {location.longitude}
-          </p>
-          <p className="mt-2 text-sm text-gray-500">사용자 유형: {userType}</p>
-        </div>
-      )}
-
-      {/* 서버 응답 표시 */}
-      {serverResponse && (
-        <div className="px-4 text-center mt-4">
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <p className="text-blue-700 font-bold">서버 응답:</p>
-            <pre className="text-sm text-blue-600 mt-2">
-              {JSON.stringify(serverResponse, null, 2)}
-            </pre>
-          </div>
-        </div>
+        <div className="text-red-500 text-center mt-4">오류: {error}</div>
       )}
     </div>
   );

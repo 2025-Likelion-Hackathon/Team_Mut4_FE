@@ -9,9 +9,6 @@ const GeoLocation = (onSuccess, onError, userType = "unknown") => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        console.log(
-          `위도: ${latitude}, 경도: ${longitude}, 사용자 유형: ${userType}`
-        );
 
         // 성공 콜백 호출
         if (onSuccess && typeof onSuccess === "function") {

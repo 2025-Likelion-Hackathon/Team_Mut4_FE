@@ -7,22 +7,40 @@ export const useLocationStore = create((set) => ({
   userType: "local", // 기본값은 'local'
 
   setAddress: (address) => {
-    // "시"가 포함된 단어만 추출하는 함수
-    const extractCityName = (fullAddress) => {
-      if (!fullAddress) return "";
+    if (!address) return;
 
-      // 주소를 공백으로 분리하여 배열로 만듦
+    // "시/군/구"까지 추출하는 함수
+    const extractCityAndDistrict = (fullAddress) => {
       const addressParts = fullAddress.split(" ");
+      let result = "";
 
-      // "시"로 끝나는 단어를 찾기
-      const cityPart = addressParts.find((part) => part.endsWith("시"));
+      // 시/특별시/광역시 찾기
+      const cityIndex = addressParts.findIndex(
+        (part) =>
+          part.endsWith("시") ||
+          part.endsWith("특별시") ||
+          part.endsWith("광역시")
+      );
 
-      return cityPart || fullAddress; // "시"가 포함된 단어가 없으면 원본 주소 반환
+      if (cityIndex !== -1) {
+        result = addressParts[cityIndex];
+
+        // 그 다음에 구/군이 있는지 확인
+        if (cityIndex + 1 < addressParts.length) {
+          const nextPart = addressParts[cityIndex + 1];
+          if (nextPart.endsWith("구") || nextPart.endsWith("군")) {
+            result += " " + nextPart;
+          }
+        }
+      }
+
+      return result || fullAddress; // 추출 실패 시 원본 반환
     };
 
-    const cityName = extractCityName(address);
-    set({ address: cityName });
+    const processedAddress = extractCityAndDistrict(address);
+    set({ address: processedAddress });
   },
+
   setLocationId: (locationId) => set({ locationId }),
   setUserType: (userType) => set({ userType }),
 }));

@@ -18,6 +18,8 @@ function LocationAuthPage() {
     address,
     userType,
     setUserType,
+    // setLatitude,
+    // setLongitude,
   } = useLocationStore();
 
   // 위치 정보 가져오기 및 서버 전송 함수
@@ -29,9 +31,11 @@ function LocationAuthPage() {
     // GeoLocation 함수 호출 (성공 콜백, 에러 콜백, 사용자 타입 전달)
     GeoLocation(
       // 성공 콜백
+
       async (locationData) => {
         setLocation(locationData);
-
+        // setLatitude(locationData.latitude);
+        // setLongitude(locationData.longitude);
         // 서버에 위치 정보 전송
         try {
           const result = await postCurrentLocation(

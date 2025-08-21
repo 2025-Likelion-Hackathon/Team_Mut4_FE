@@ -6,6 +6,8 @@ export const useLocationStore = create((set) => ({
   address: "",
   userType: "local", // 기본값은 'local'
 
+  latitude: null,
+  longitude: null,
   setAddress: (address) => {
     if (!address) return;
 

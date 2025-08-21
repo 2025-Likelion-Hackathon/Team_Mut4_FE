@@ -6,11 +6,41 @@ export const useLocationStore = create((set) => ({
   address: "",
   userType: "local", // 기본값은 'local'
 
-  //전체 주소 반환하게 변경 ( 시/구/군 반영시 오류 발생 )
   setAddress: (address) => {
     if (!address) return;
-    set({ address });
+
+    // "시/군/구"까지 추출하는 함수
+    const extractCityAndDistrict = (fullAddress) => {
+      const addressParts = fullAddress.split(" ");
+      let result = "";
+
+      // 시/특별시/광역시 찾기
+      const cityIndex = addressParts.findIndex(
+        (part) =>
+          part.endsWith("시") ||
+          part.endsWith("특별시") ||
+          part.endsWith("광역시")
+      );
+
+      if (cityIndex !== -1) {
+        result = addressParts[cityIndex];
+
+        // 그 다음에 구/군이 있는지 확인
+        if (cityIndex + 1 < addressParts.length) {
+          const nextPart = addressParts[cityIndex + 1];
+          if (nextPart.endsWith("구") || nextPart.endsWith("군")) {
+            result += " " + nextPart;
+          }
+        }
+      }
+
+      return result || fullAddress; // 추출 실패 시 원본 반환
+    };
+
+    const processedAddress = extractCityAndDistrict(address);
+    set({ address: processedAddress });
   },
+
   setLocationId: (locationId) => set({ locationId }),
   setUserType: (userType) => set({ userType }),
 }));

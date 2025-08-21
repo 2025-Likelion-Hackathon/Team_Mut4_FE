@@ -5,7 +5,7 @@ const index = () => {
   const chatViews = [
     { title: "토박이에게 물어보기", link: "/chatbot" },
     // 저장 리스트 개수 api 연동 필요
-    { title: "저장 리스트", link: "/history", num: 3 },
+    { title: "저장 리스트", link: "/history" },
   ];
   return (
     <div className="w-full h-auto bg-white mb-5">
@@ -21,7 +21,6 @@ const index = () => {
             sub={chatView.sub}
             title={chatView.title}
             link={chatView.link}
-            num={chatView.num}
           />
         ))}
       </div>

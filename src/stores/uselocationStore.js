@@ -3,7 +3,9 @@ import { create } from "zustand";
 
 export const useLocationStore = create((set) => ({
   locationId: null,
-  address: "",
+
+  address: "", // 시 /군/구 단위로 저장
+  cityName: "", // 시/군/구에서 시 이름만 저장
   userType: "local", // 기본값은 'local'
 
   latitude: null,
@@ -45,4 +47,5 @@ export const useLocationStore = create((set) => ({
 
   setLocationId: (locationId) => set({ locationId }),
   setUserType: (userType) => set({ userType }),
+  setCityName: (cityName) => set({ cityName }),
 }));

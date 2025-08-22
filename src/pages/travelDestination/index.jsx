@@ -8,7 +8,7 @@ import { getCenterByName } from "@/pages/travelDestination/lib/kakao";
 export default function TravelDestination() {
   const [step, setStep] = useState(1);
   const [sido, setSido] = useState(null);
-  const { setAddress, setUserType } = useLocationStore();
+  const { setAddress, setUserType, setCityName } = useLocationStore();
 
   async function handleComplete(guName) {
     const full = `${sido.label} ${guName}`;
@@ -16,6 +16,7 @@ export default function TravelDestination() {
       const c = await getCenterByName(full);
     } catch (e) {}
     setAddress(full);
+    setCityName(full.split(" ")[1]);
     setStep(3);
   }
 

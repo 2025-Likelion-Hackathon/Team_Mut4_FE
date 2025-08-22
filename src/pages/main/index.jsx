@@ -10,7 +10,7 @@ import { useLocationStore } from "../../stores/uselocationStore";
 // 메인 페이지 컴포넌트
 
 function MainPage() {
-  const { userType, locationId, address } = useLocationStore();
+  const { userType, locationId, address, setCityName } = useLocationStore();
 
   return (
     <div className="flex flex-col h-full bg-white">

@@ -1,42 +1,55 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { IoChevronBackOutline } from 'react-icons/io5';
+import { IoChevronBackOutline, IoBookmarkOutline, IoSearchOutline } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 
 const HeaderContainer = styled.div`
   position: relative;
   height: 320px;
-  background-color:rgb(137, 136, 136);
+  background-color: #d9d9d9;
   overflow: hidden;
 `;
 
 const HeaderTop = styled.div`
   position: absolute;
-  height: 50px;
-  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 10;
-  background-color: #fff;
-  padding: 20px;
+  padding: 0 1rem;
+  z-index: 20;
 `;
 
-const IconButton = styled.button`
+const BackButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
-  color: black;
   font-size: 1.5rem;
+  color: black;
 `;
 
-const Title = styled.h2`
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: black;
+const SearchContainer = styled.div`
+  display: flex;
+  align-items: center;
   flex-grow: 1;
-  text-align: center;
+  background-color: #f0f0f0;
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  margin: 0 1rem;
+  border: 1px solid #e0e0e0;
+`;
+
+const BookmarkButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: 1.5rem;
+  color: black;
 `;
 
 const ImageIndicator = styled.div`
@@ -51,32 +64,22 @@ const ImageIndicator = styled.div`
   z-index: 10;
 `;
 
-const RestaurantDetailsHeader = () => {
+const RestaurantDetailsHeader = ({ title = "가게 이름" }) => { // title prop을 받도록 수정
   const navigate = useNavigate();
 
   const handleGoBack = () => {
     navigate(-1);
   };
+
   return (
     <HeaderContainer>
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundImage: `url('placeholder_image_url.jpg')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      />
       <HeaderTop>
-        <IconButton onClick={handleGoBack}>
+        <BackButton onClick={handleGoBack}>
           <IoChevronBackOutline />
-        </IconButton>
-        <Title>가게 이름</Title>
-        <div style={{ width: '1.5rem' }} />
+        </BackButton>
+        <SearchContainer>
+          <span style={{ fontWeight: 'bold', flexGrow: 1, textAlign: 'center' }}>{title}</span>
+        </SearchContainer>
       </HeaderTop>
       <ImageIndicator>1/3</ImageIndicator>
     </HeaderContainer>

@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { Link } from 'react-router-dom';
 import { ItemContainer, ImagePlaceholder, ContentWrapper, HeaderWrapper, RestaurantName, Checkbox, AddressWrapper, AddressIcon, TagsWrapper, Tag } from '../../restaurant/components/RestaurantItem';
 
 const AccommodationItem = ({ accommodation }) => {
   return (
-    <ItemContainer>
+    <ItemContainer to={`/accommodation/${accommodation.id}`}>
       <ImagePlaceholder />
       
       <ContentWrapper>

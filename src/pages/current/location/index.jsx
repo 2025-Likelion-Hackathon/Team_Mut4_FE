@@ -21,6 +21,8 @@ const index = () => {
       return 590;
     } else if (width === 375 && height === 667) {
       return 410;
+    } else if (width === 430 && height === 932) {
+      return 674;
     } else {
       return 723; // 기본값
     }
@@ -46,11 +48,11 @@ const index = () => {
 
   return (
     <div className="flex flex-col h-screen w-full bg-white">
-      <div className="w-full h-[58px] flex items-center p-4 bg-white gap-1/3">
+      <div className="w-full h-[58px] flex items-center p-4 bg-white ">
         <Link to="/auth">
           <Go />
         </Link>
-        <div className="font-bold">내 동네 설정</div>
+        <div className="ml-[32%] font-bold">내 동네 설정</div>
       </div>
       <div className="w-full h-full bg-white flex-1 flex flex-col relative">
         <div className="flex-1 h-0">

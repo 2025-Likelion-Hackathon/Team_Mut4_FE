@@ -21,6 +21,8 @@ const index = () => {
       return 590;
     } else if (width === 375 && height === 667) {
       return 410;
+    } else if (width === 430 && height === 932) {
+      return 674;
     } else {
       return 723; // 기본값
     }

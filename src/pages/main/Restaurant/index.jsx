@@ -10,16 +10,13 @@ const index = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("Current locationId:", locationId); // 디버그용 로그 추가
-
         if (!locationId) {
           console.warn("LocationId is not available yet");
           return;
         }
 
-        const data = await GetNearFood(2); // locationId, 반경 설정 필요
+        const data = await GetNearFood(locationId); // locationId, 반경 설정 필요
         setPlaceContent(data);
-        console.log("data랑 placeContent", data, placeContent);
       } catch (error) {
         console.error("Error fetching nearby food:", error);
         // 더 자세한 에러 정보 로깅

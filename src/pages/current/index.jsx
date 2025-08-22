@@ -18,6 +18,7 @@ function LocationAuthPage() {
     address,
     userType,
     setUserType,
+    setCityName,
     // setLatitude,
     // setLongitude,
   } = useLocationStore();
@@ -53,6 +54,7 @@ function LocationAuthPage() {
 
             if (result.data.address) {
               setAddress(result.data.address);
+              setCityName(result.data.address.split(" ")[1]); // 시/군/구 단위로 저장
             }
           } else {
             setError(`서버 전송 실패: ${result.error}`);

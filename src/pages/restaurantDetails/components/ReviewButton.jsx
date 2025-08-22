@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { useRestaurantDetailsStore } from '../../../stores/useRestaurantDetailsStore';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const ButtonContainer = styled.div`
   padding: 1.5rem;
@@ -21,21 +21,19 @@ const Button = styled.button`
   transition: background-color 0.3s ease;
 `;
 
-const ReviewButton = () => {
-  const isLocal = useRestaurantDetailsStore((state) => state.isLocal);
+const ReviewButton = ({ type, isLocal }) => {
+  const navigate = useNavigate();
+  const { id } = useParams();
 
-  const handleClick = () => {
-    if (isLocal) {
-      alert('리뷰 쓰기 페이지로 이동합니다.');
-      // 여기에 리뷰 쓰기 페이지 이동 추가
-    } else {
-      alert('현지인만 리뷰를 작성할 수 있습니다.');
+  const handleReviewClick = () => {
+    if (isLocal) { 
+      navigate(`/${type}/${id}/review`);
     }
   };
 
   return (
     <ButtonContainer>
-      <Button active={isLocal} onClick={handleClick}>
+      <Button active={isLocal} onClick={handleReviewClick}>
         리뷰 쓰러 가기
       </Button>
     </ButtonContainer>

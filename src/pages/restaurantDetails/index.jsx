@@ -27,6 +27,7 @@ const ContentWrapper = styled.div`
 
 const RestaurantDetailPage = () => {
   const fetchRestaurantData = useRestaurantDetailsStore((state) => state.fetchRestaurantData);
+  const isLocal = useRestaurantDetailsStore((state) => state.isLocal);
 
   useEffect(() => {
     fetchRestaurantData();
@@ -40,7 +41,7 @@ const RestaurantDetailPage = () => {
         <MenuSection />
         <LocalReviewSection />
       </ContentWrapper>
-      <ReviewButton />
+      <ReviewButton type="restaurant" isLocal={isLocal} />
       <ReviewsSection />
     </Container>
   );

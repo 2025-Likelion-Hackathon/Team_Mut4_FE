@@ -14,6 +14,7 @@ const dummyData = {
 
 export const useAccommodationDetailsStore = create((set) => ({
   accommodation: null,
+  isLocal: true,
   fetchAccommodationData: () => {
     set({ accommodation: dummyData });
   },

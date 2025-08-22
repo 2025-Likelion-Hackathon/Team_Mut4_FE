@@ -1,25 +1,36 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PlacePreview from "../components/PlacePreview";
-
+import GetNearAccomodation from "../../../api/GetNearAccomodation";
+import { useLocationStore } from "../../../stores/uselocationStore";
 const index = () => {
-  // 추후 api 연동 후 zustand로 상태 관리 필요
-  const placeContent = [
-    {
-      location: "강남",
-      name: "호텔",
-      price: "100,000원",
-    },
-    {
-      location: "강남",
-      name: "호텔",
-      price: "100,000원",
-    },
-    {
-      location: "강남",
-      name: "호텔",
-      price: "100,000원",
-    },
-  ];
+  const [placeContent, setPlaceContent] = useState([]);
+  const { locationId } = useLocationStore();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (!locationId) {
+          console.warn("LocationId is not available yet");
+          return;
+        }
+
+        const data = await GetNearAccomodation(1); // locationId, 반경 설정 필요
+        setPlaceContent(data);
+      } catch (error) {
+        console.error("Error fetching nearby accommodation:", error);
+        // 더 자세한 에러 정보 로깅
+        if (error.response) {
+          console.error(
+            "Error response:",
+            error.response.status,
+            error.response.data
+          );
+        }
+      }
+    };
+
+    fetchData();
+  }, [locationId]); // locationId가 변경될 때마다 다시 실행
   return (
     <div className="flex flex-col h-full bg-gray-100">
       <PlacePreview

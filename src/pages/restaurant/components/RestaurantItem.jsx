@@ -1,11 +1,14 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { Link } from 'react-router-dom';
 
-export const ItemContainer = styled.div`
+export const ItemContainer = styled(Link)`
   display: flex;
   align-items: flex-start;
   padding: 1rem;
   border-bottom: 1px solid #e5e7eb;
+  text-decoration: none;
+  color: inherit;
 `;
 
 export const ImagePlaceholder = styled.div`
@@ -70,7 +73,7 @@ export const Tag = styled.span`
 
 const RestaurantItem = ({ restaurant }) => {
   return (
-    <ItemContainer>
+    <ItemContainer to={`/restaurant/${restaurant.id}`}>
       <ImagePlaceholder />
       
       <ContentWrapper>

@@ -16,7 +16,9 @@ const AIChatbotHistoryPage = lazy(
   () => import("../pages/chatbot/chatHistory.jsx")
 );
 const RestaurantPage = lazy(() => import("../pages/restaurant"));
+const RestaurantDetailsPage = lazy(() => import("../pages/restaurantDetails"));
 const AccommodationPage = lazy(() => import("../pages/accommodation"));
+const AccommodationDetailsPage = lazy(() => import("../pages/AccommodationDetails"));
 
 const router = createBrowserRouter([
   // Initial Flow Routes (without common Layout for these specific steps)
@@ -75,8 +77,16 @@ const router = createBrowserRouter([
         element: <RestaurantPage />,
       },
       {
+        path: "/restaurant/:id",
+        element: <RestaurantDetailsPage />,
+      },
+      {
         path: "/accommodation",
         element: <AccommodationPage />,
+      },
+      {
+        path: "/accommodation/:id",
+        element: <AccommodationDetailsPage />,
       },
     ],
   },

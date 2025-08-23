@@ -2,24 +2,22 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { useRestaurantDetailsStore } from '../../../stores/useRestaurantDetailsStore';
 
+// ... (styled-components 코드는 이전과 동일) ...
 const MenuContainer = styled.div`
   padding: 1rem 1.5rem;
   border-top: 10px solid #f0f0f0;
 `;
-
 const SectionTitle = styled.h2`
   font-size: 1.1rem;
   font-weight: bold;
   margin-bottom: 1rem;
 `;
-
 const MenuList = styled.ul`
   list-style: none;
   background-color: #fff;
   border-radius: 12px;
   padding: 10px 50px;
 `;
-
 const MenuItem = styled.li`
   display: flex;
   justify-content: space-between;
@@ -29,22 +27,33 @@ const MenuItem = styled.li`
     border-bottom: none;
   }
 `;
-
 const MenuName = styled.span`
   font-size: 1rem;
   color: #333;
 `;
-
 const MenuPrice = styled.span`
   font-size: 1rem;
   font-weight: bold;
   color: #333;
 `;
+const NoMenuText = styled.p`
+  text-align: center;
+  padding: 2rem;
+  color: #888;
+`;
 
 const MenuSection = () => {
   const restaurant = useRestaurantDetailsStore((state) => state.restaurant);
 
-  if (!restaurant) return null;
+  // 🔽 menus 데이터가 없거나 비어있을 경우를 처리
+  if (!restaurant || !restaurant.menus || restaurant.menus.length === 0) {
+    return (
+      <MenuContainer>
+        <SectionTitle>메뉴</SectionTitle>
+        <NoMenuText>등록된 메뉴 정보가 없습니다.</NoMenuText>
+      </MenuContainer>
+    );
+  }
 
   return (
     <MenuContainer>

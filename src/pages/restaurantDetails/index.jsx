@@ -8,6 +8,7 @@ import LocalReviewSection from './components/LocalReviewSection';
 import ReviewButton from './components/ReviewButton';
 import ReviewsSection from './components/ReviewsSection';
 import { useRestaurantDetailsStore } from '../../stores/useRestaurantDetailsStore';
+import { useLocationStore } from '../../stores/uselocationStore';
 
 const Container = styled.div`
   max-width: 600px;
@@ -34,7 +35,8 @@ const LoadingText = styled.p`
 
 const RestaurantDetailPage = () => {
   const { id } = useParams();
-  const { restaurant, isLoading, error, fetchRestaurantData, isLocal } = useRestaurantDetailsStore();
+  const { restaurant, isLoading, error, fetchRestaurantData } = useRestaurantDetailsStore();
+  const { isLocal } = useLocationStore();
 
   useEffect(() => {
     if (id) {

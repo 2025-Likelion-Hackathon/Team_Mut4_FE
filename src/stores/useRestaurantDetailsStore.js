@@ -6,7 +6,6 @@ export const useRestaurantDetailsStore = create((set) => ({
   restaurant: null,
   isLoading: true,
   error: null,
-  isLocal: true, // 현지인 여부 (이 값은 다른 로직에 의해 설정된다고 가정)
 
   // API 호출 액션
   fetchRestaurantData: async (foodId) => {

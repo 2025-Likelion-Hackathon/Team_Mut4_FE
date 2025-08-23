@@ -58,28 +58,6 @@ const GradeLabel = styled.span`
   flex: 1;
 `;
 
-const PriceTitle = styled.h3`
-  font-size: 0.95rem;
-  font-weight: bold;
-  margin-bottom: 0.8rem;
-`;
-
-const PriceRow = styled.div`
-  display: flex;
-  gap: 0.5rem;
-`;
-
-const PriceItem = styled.div`
-  background-color: ${(props) => (props.active ? '#a9a9a9' : '#e5e7eb')};
-  color: ${(props) => (props.active ? 'white' : '#4b5563')};
-  padding: 0.5rem 1rem;
-  border-radius: 999px;
-  font-weight: bold;
-  font-size: 0.9rem;
-  flex: 1;
-  text-align: center;
-`;
-
 const ReviewItem = styled.div`
   background-color: #f0f0f0;
   padding: 0.8rem 1rem;
@@ -116,71 +94,52 @@ const LocalReviewSection = () => {
 
   if (!restaurant) return null;
 
-  const { localReview } = restaurant;
-
   const grades = ['E', 'D', 'C', 'B', 'A'];
-
-  const gradeWidths = {
-    E: 20,
-    D: 40,
-    C: 60,
-    B: 80,
-    A: 100,
-  };
-
-  const currentGrade = 'A';
+  const gradeWidths = { E: 20, D: 40, C: 60, B: 80, A: 100 };
+  
+  const currentGrade = restaurant.averageGrad; // 'N/A'일 수 있음
+  const gradeWidth = gradeWidths[currentGrade] || 0;
 
   return (
     <ReviewContainer>
       <SectionTitle>현지인 리뷰</SectionTitle>
 
+      {/* 현지인 등급 섹션 */}
       <SectionBox>
-        <GradeTitle>
-          현지인 등급 <span style={{ fontWeight: 'bold' }}>{currentGrade}</span> 가게예요
-        </GradeTitle>
-        <GradeBarWrapper>
-          <GradeFill width={gradeWidths[currentGrade]} />
-        </GradeBarWrapper>
-        <GradeLabelWrapper>
-          {grades.map((grade) => (
-            <GradeLabel key={grade}>{grade}</GradeLabel>
+        {/* 🔽 수정된 부분 */}
+        {currentGrade === 'N/A' ? (
+          <GradeTitle>현지인 등급 인증 대기중</GradeTitle>
+        ) : (
+          <>
+            <GradeTitle>
+              현지인 등급 <span style={{ fontWeight: 'bold' }}>{currentGrade}</span> 가게예요
+            </GradeTitle>
+            <GradeBarWrapper>
+              <GradeFill width={gradeWidth} />
+            </GradeBarWrapper>
+            <GradeLabelWrapper>
+              {grades.map((grade) => (
+                <GradeLabel key={grade}>{grade}</GradeLabel>
+              ))}
+            </GradeLabelWrapper>
+          </>
+        )}
+      </SectionBox>
+
+      {/* topTags를 사용하여 리뷰 키워드를 표시 */}
+      {restaurant.topTags && restaurant.topTags.length > 0 && (
+        <SectionBox>
+          {restaurant.topTags.map((tag) => (
+            <ReviewItem key={tag.id}>
+              <ReviewTextWrapper>
+                <ReviewIcon>👍</ReviewIcon>
+                <ReviewTypeText>{tag.tagName}</ReviewTypeText>
+              </ReviewTextWrapper>
+              <ReviewCount>{tag.count}</ReviewCount>
+            </ReviewItem>
           ))}
-        </GradeLabelWrapper>
-      </SectionBox>
-
-      <SectionBox>
-        <PriceTitle>
-          평균 가격에서 <span style={{ fontWeight: 'bold' }}>{localReview.averagePrice}</span>원 더 싸요
-        </PriceTitle>
-        <PriceRow>
-          <PriceItem>평균 15000</PriceItem>
-          <PriceItem active>10000원</PriceItem>
-        </PriceRow>
-      </SectionBox>
-
-      <SectionBox>
-        <ReviewItem>
-          <ReviewTextWrapper>
-            <ReviewIcon>👍</ReviewIcon>
-            <ReviewTypeText>맛있어요</ReviewTypeText>
-          </ReviewTextWrapper>
-          <ReviewCount>20</ReviewCount>
-        </ReviewItem>
-        <ReviewItem>
-          <ReviewTextWrapper>
-            <ReviewIcon>👍</ReviewIcon>
-            <ReviewTypeText>맛있어요</ReviewTypeText>
-          </ReviewTextWrapper>
-          <ReviewCount>20</ReviewCount>
-        </ReviewItem>
-        <ReviewItem>
-          <ReviewTextWrapper>
-            <ReviewIcon>👍</ReviewIcon>
-            <ReviewTypeText>맛있어요</ReviewTypeText>
-          </ReviewTextWrapper>
-          <ReviewCount>20</ReviewCount>
-        </ReviewItem>
-      </SectionBox>
+        </SectionBox>
+      )}
     </ReviewContainer>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from '@emotion/styled';
+import { useParams } from 'react-router-dom'; // 🔽 useParams 추가
 import RestaurantDetailsHeader from './components/RestaurantDetailsHeader';
 import InfoSection from './components/InfoSection';
 import MenuSection from './components/MenuSection';
@@ -25,17 +26,42 @@ const ContentWrapper = styled.div`
   overflow: hidden;
 `;
 
+const LoadingText = styled.p`
+  text-align: center;
+  padding: 4rem;
+  font-size: 1.2rem;
+`;
+
 const RestaurantDetailPage = () => {
-  const fetchRestaurantData = useRestaurantDetailsStore((state) => state.fetchRestaurantData);
-  const isLocal = useRestaurantDetailsStore((state) => state.isLocal);
+  // 🔽 1. URL 파라미터에서 음식점 id를 가져옵니다.
+  const { id } = useParams(); 
+  // 🔽 2. 스토어에서 필요한 상태와 액션을 모두 가져옵니다.
+  const { restaurant, isLoading, error, fetchRestaurantData, isLocal } = useRestaurantDetailsStore();
 
   useEffect(() => {
-    fetchRestaurantData();
-  }, [fetchRestaurantData]);
+    // 🔽 3. id가 존재할 때만 API를 호출합니다.
+    if (id) {
+      fetchRestaurantData(id);
+    }
+  }, [id, fetchRestaurantData]);
+
+  // 🔽 4. 로딩 및 에러 상태를 화면에 표시합니다.
+  if (isLoading) {
+    return <LoadingText>정보를 불러오는 중...</LoadingText>;
+  }
+
+  if (error) {
+    return <LoadingText>{error}</LoadingText>;
+  }
+
+  if (!restaurant) {
+    return <LoadingText>음식점 정보가 없습니다.</LoadingText>;
+  }
 
   return (
     <Container>
-      <RestaurantDetailsHeader />
+      {/* 🔽 5. 헤더에 음식점 이름을 prop으로 전달합니다. */}
+      <RestaurantDetailsHeader title={restaurant.name} />
       <ContentWrapper>
         <InfoSection />
         <MenuSection />

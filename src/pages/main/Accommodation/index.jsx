@@ -37,7 +37,6 @@ const index = () => {
     try {
       const result = await postAccomBookmark(locationId, accommodationId);
       if (result.success) {
-        console.log("숙소 북마크 추가 성공:", result.data);
         return true;
       } else {
         console.error("숙소 북마크 추가 실패:", result.error);

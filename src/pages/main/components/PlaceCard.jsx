@@ -1,10 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import Mark from "../../../assets/Bookmark.svg?react";
 import { Link } from "react-router-dom";
 import Bg from "../../../assets/BackGround.svg?react";
+import AtBook from "../../../assets/Iconex/Filled/Bookmark.svg?react";
+import Book from "../../../assets/Iconex/Light/Bookmark.svg?react";
+
 // PlaceCard 컴포넌트는 숙소나 맛집의 정보를 표시하는 카드 형태로 구성됩니다.
 // address, name, price 등의 props를 받아 해당 정보를 표시합니다.
-const PlaceCard = ({ address, name, price }) => {
+const PlaceCard = ({ address, name, price, id, onBookmark, isBookmarked: initialBookmarked = false }) => {
+  const [isBookmarked, setIsBookmarked] = useState(initialBookmarked);
+
+  const handleBookmarkClick = async () => {
+    if (onBookmark) {
+      const success = await onBookmark(id);
+      if (success !== false) { // API 호출이 성공했거나 결과를 반환하지 않은 경우
+        setIsBookmarked(!isBookmarked);
+      }
+    }
+  };
   return (
     <div className="relative w-[156px] h-[199px] mt-[27px] overflow-hidden rounded-[8px]">
       {/* 배경 SVG */}
@@ -28,7 +41,17 @@ const PlaceCard = ({ address, name, price }) => {
               </div>
             </div>
             {/* 북마크 아이콘 눌렀을시 찜 전용 api 연동 필요 */}
-            <Mark className="drop-shadow-md" />
+            {isBookmarked ? (
+              <AtBook 
+                className="drop-shadow-md cursor-pointer" 
+                onClick={handleBookmarkClick}
+              />
+            ) : (
+              <Book 
+                className="drop-shadow-md cursor-pointer" 
+                onClick={handleBookmarkClick}
+              />
+            )}
           </div>
           <div className="flex text-[12px] font-bold gap-[10px]">
             <div className="w-[50px] h-[21px] rounded-[10px] bg-[#D9D9D9] text-center bg-opacity-90">

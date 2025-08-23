@@ -26,9 +26,9 @@ function MainPage() {
           </div>
           <Link
             to="/destination"
-            className="w-[auto] h-[auto]  text-[12px] bg-white rounded-[8px]  p-2 "
+            className="w-[auto] h-[24px] flex items-center justify-center text-white text-[12px] bg-[#cacaca] rounded-[8px]  p-2 "
           >
-            여행지 선택
+            수정
           </Link>
         </div>
         <Restaurant /> {/* 맛집 미리보기 관련 api 연동 필요  */}

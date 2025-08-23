@@ -20,9 +20,6 @@ function LocationAuthPage() {
     userType,
     setUserType,
     setCityName,
-
-    // setLatitude,
-    // setLongitude,
   } = useLocationStore();
 
   // 위치 정보 가져오기 및 서버 전송 함수
@@ -37,8 +34,7 @@ function LocationAuthPage() {
 
       async (locationData) => {
         setLocation(locationData);
-        // setLatitude(locationData.latitude);
-        // setLongitude(locationData.longitude);
+
         // 서버에 위치 정보 전송
         try {
           let result;
@@ -75,7 +71,6 @@ function LocationAuthPage() {
         setLoading(false);
         console.error("위치 정보 가져오기 실패:", error);
       }
-      // 사용자 타입
     );
   };
 
@@ -90,7 +85,7 @@ function LocationAuthPage() {
           to="/location"
           onClick={getCurrentLocation}
           onMouseEnter={() => setUserType("local")}
-          className={`w-1/2 h-full flex items-center justify-center border-2 border-[#01D281] text-[#01D281] bg-[#C2FFE7] rounded-lg ${
+          className={`w-1/2 h-full flex items-center justify-center  text-[#01D281] bg-[#C2FFE7] rounded-lg ${
             loading ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
@@ -100,8 +95,11 @@ function LocationAuthPage() {
         <Link
           to="/main"
           onClick={getCurrentLocation}
+          // onClick={() => {
+          //   setLocationId(2);
+          // }} // 테스트
           onMouseEnter={() => setUserType("tourist")}
-          className={`w-1/2 h-full flex items-center justify-center border-2 border-[#01D281] text-[#01D281] bg-[#C2FFE7] rounded-lg ${
+          className={`w-1/2 h-full flex items-center justify-center  text-[#01D281] bg-[#C2FFE7] rounded-lg ${
             loading ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >

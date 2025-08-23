@@ -1,32 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
+import axios from 'axios';
 import AccommodationItem from './AccommodationItem';
 import FilterDropdown from '../../restaurant/components/FilterDropdown';
-
-// 숙소 더미 데이터
-const dummyAccommodations = [
-  {
-    id: 1,
-    name: '호텔 리츠칼튼',
-    address: '서울 강남구 역삼동 123-45',
-    discount: '1박 10만원 할인',
-    rating: '5성급'
-  },
-  {
-    id: 2,
-    name: '신라호텔',
-    address: '서울 중구 장충동 2가 202',
-    discount: '조식 무료 제공',
-    rating: '5성급'
-  },
-  {
-    id: 3,
-    name: '제주 신라호텔',
-    address: '제주 서귀포시 중문관광로72번길 75',
-    discount: '사우나 이용권 증정',
-    rating: '5성급'
-  },
-];
+import { useLocationStore } from '../../../stores/useLocationStore';
 
 const ListContainer = styled.div`
   padding: 1rem;
@@ -39,16 +16,79 @@ const FilterContainer = styled.div`
   justify-content: flex-end;
 `;
 
+const LoadingText = styled.p`
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+`;
+
 const AccommodationList = () => {
+  const [accommodations, setAccommodations] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedFilter, setSelectedFilter] = useState('거리순');
+
+  const { locationId } = useLocationStore();
+
+  useEffect(() => {
+    if (locationId) {
+      const fetchAccommodations = async () => {
+        try {
+          setIsLoading(true);
+          
+          const endpoint = `/locations/${locationId}/nearby-accommodation-all`;
+          const fullUrl = `${import.meta.env.VITE_API_BASE_URL}${endpoint}`;
+
+          const response = await axios.get(fullUrl, {
+            params: { radius: 2000 },
+            timeout: 10000,
+          });
+
+          setAccommodations(response.data);
+          setError(null);
+        } catch (err) {
+          console.error("Error fetching accommodations:", err);
+          setError("숙소 정보를 불러오는 데 실패했습니다.");
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchAccommodations();
+    } else {
+      setIsLoading(false);
+      setAccommodations([]);
+    }
+  }, [locationId, selectedFilter]);
+
+  if (!locationId) {
+    return <LoadingText>위치 정보를 가져오는 중...</LoadingText>;
+  }
+
+  if (isLoading) {
+    return <LoadingText>숙소 정보를 불러오는 중...</LoadingText>;
+  }
+
+  if (error) {
+    return <LoadingText>{error}</LoadingText>;
+  }
+
   return (
     <div>
         <FilterContainer>
-            <FilterDropdown />
+            <FilterDropdown 
+              selectedFilter={selectedFilter}
+              onSelectFilter={setSelectedFilter}
+            />
         </FilterContainer>
         <ListContainer>
-            {dummyAccommodations.map(item => (
-                <AccommodationItem key={item.id} accommodation={item} />
-            ))}
+            {accommodations.length > 0 ? (
+                accommodations.map(item => (
+                    <AccommodationItem key={item.id} accommodation={item} />
+                ))
+            ) : (
+                <LoadingText>주변에 숙소가 없습니다.</LoadingText>
+            )}
         </ListContainer>
     </div>
   );

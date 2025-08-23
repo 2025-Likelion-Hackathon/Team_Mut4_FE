@@ -89,10 +89,6 @@ const ReviewsSection = ({ reviews = [] }) => {
   const [activeTab, setActiveTab] = useState('recommended');
   const [expandedReviews, setExpandedReviews] = useState({});
 
-  // 🔽 스토어 직접 호출 코드를 삭제하고 props를 그대로 사용합니다.
-  // const restaurant = useRestaurantDetailsStore((state) => state.restaurant);
-  // const reviews = restaurant?.reviews || [];
-
   const toggleExpand = (id) => {
     setExpandedReviews((prev) => ({
       ...prev,

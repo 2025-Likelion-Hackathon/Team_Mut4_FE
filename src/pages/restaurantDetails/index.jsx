@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from '@emotion/styled';
-import { useParams } from 'react-router-dom'; // 🔽 useParams 추가
+import { useParams } from 'react-router-dom';
 import RestaurantDetailsHeader from './components/RestaurantDetailsHeader';
 import InfoSection from './components/InfoSection';
 import MenuSection from './components/MenuSection';
@@ -33,19 +33,15 @@ const LoadingText = styled.p`
 `;
 
 const RestaurantDetailPage = () => {
-  // 🔽 1. URL 파라미터에서 음식점 id를 가져옵니다.
-  const { id } = useParams(); 
-  // 🔽 2. 스토어에서 필요한 상태와 액션을 모두 가져옵니다.
+  const { id } = useParams();
   const { restaurant, isLoading, error, fetchRestaurantData, isLocal } = useRestaurantDetailsStore();
 
   useEffect(() => {
-    // 🔽 3. id가 존재할 때만 API를 호출합니다.
     if (id) {
       fetchRestaurantData(id);
     }
   }, [id, fetchRestaurantData]);
 
-  // 🔽 4. 로딩 및 에러 상태를 화면에 표시합니다.
   if (isLoading) {
     return <LoadingText>정보를 불러오는 중...</LoadingText>;
   }
@@ -64,11 +60,9 @@ const RestaurantDetailPage = () => {
       <ContentWrapper>
         <InfoSection />
         <MenuSection />
-        {/* 🔽 LocalReviewSection에 props로 데이터 전달 */}
         <LocalReviewSection data={restaurant} />
       </ContentWrapper>
       <ReviewButton type="restaurant" isLocal={isLocal} />
-      {/* 🔽 ReviewsSection에 props로 데이터 전달 */}
       <ReviewsSection reviews={restaurant.reviews} />
     </Container>
   );

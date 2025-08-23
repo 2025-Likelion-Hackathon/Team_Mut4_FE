@@ -95,6 +95,7 @@ const LocalReviewSection = ({ data }) => {
   const gradeWidths = { E: 20, D: 40, C: 60, B: 80, A: 100 };
   
   const currentGrade = data.averageGrade;
+  console.log(currentGrade);
   const gradeWidth = gradeWidths[currentGrade] || 0;
   const topTags = data.topTags || [];
 
@@ -103,8 +104,7 @@ const LocalReviewSection = ({ data }) => {
       <SectionTitle>현지인 리뷰</SectionTitle>
 
       <SectionBox>
-        {/* 🔽 이 부분이 수정되었습니다 🔽 */}
-        {currentGrade === 'N/A' ? (
+        {currentGrade === 'N/A' || currentGrade === undefined ? (
           <GradeTitle>현지인 등급 인증 대기중</GradeTitle>
         ) : (
           <>

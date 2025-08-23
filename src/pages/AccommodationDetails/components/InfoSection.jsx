@@ -1,11 +1,8 @@
-// accommodationDetails/components/InfoSection.jsx
-
 import React from 'react';
 import styled from '@emotion/styled';
 import { IoLocationOutline, IoCallOutline, IoLinkOutline } from 'react-icons/io5';
 import { useAccommodationDetailsStore } from '../../../stores/useAccommodationDetailsStore';
 
-// ... (styled-components 코드는 이전과 동일) ...
 const InfoContainer = styled.div`
   padding: 1.5rem;
   background-color: #fff;
@@ -58,7 +55,6 @@ const InfoSection = () => {
       </InfoRow>
       <InfoRow>
         <InfoIcon><IoCallOutline /></InfoIcon>
-        {/* 🔽 이 부분이 수정되었습니다 🔽 */}
         {phone ? (
           <InfoText href={`tel:${phone}`}>{phone}</InfoText>
         ) : (

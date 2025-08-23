@@ -1,11 +1,8 @@
-// restaurantDetails/components/InfoSection.jsx
-
 import React from 'react';
 import styled from '@emotion/styled';
 import { IoLocationOutline, IoCallOutline } from 'react-icons/io5';
 import { useRestaurantDetailsStore } from '../../../stores/useRestaurantDetailsStore';
 
-// ... (styled-components 코드는 이전과 동일) ...
 const InfoContainer = styled.div`
   padding: 1.5rem;
   background-color: #f0f0f0;
@@ -78,7 +75,6 @@ const InfoSection = () => {
         </InfoRow>
         <InfoRow>
           <IoCallOutline />
-          {/* 🔽 이 부분이 수정되었습니다 🔽 */}
           <span>{restaurant.phone || '해당 정보가 없습니다.'}</span>
         </InfoRow>
       </DetailInfo>

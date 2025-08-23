@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from '@emotion/styled';
-import { useParams } from 'react-router-dom'; // 🔽 useParams 추가
+import { useParams } from 'react-router-dom';
 import RestaurantDetailsHeader from '../restaurantDetails/components/RestaurantDetailsHeader';
 import InfoSection from './components/InfoSection';
 import LocationSection from './components/LocationSection';
@@ -27,16 +27,15 @@ const LoadingText = styled.p`
 `;
 
 const AccommodationDetailsPage = () => {
-  const { id } = useParams(); // 🔽 URL에서 id 가져오기
+  const { id } = useParams();
   const { accommodation, isLoading, error, fetchAccommodationData, isLocal } = useAccommodationDetailsStore();
 
   useEffect(() => {
     if (id) {
-      fetchAccommodationData(id); // 🔽 id로 데이터 fetching
+      fetchAccommodationData(id);
     }
   }, [id, fetchAccommodationData]);
 
-  // 🔽 로딩 및 에러 처리
   if (isLoading) {
     return <LoadingText>정보를 불러오는 중...</LoadingText>;
   }
@@ -53,15 +52,12 @@ const AccommodationDetailsPage = () => {
     <Container>
       <RestaurantDetailsHeader title={accommodation.name} />
       <InfoSection />
-      
-      {/* 🔽 이 부분이 수정되었습니다 🔽 */}
       <LocationSection 
         name={accommodation.name}
         address={accommodation.roadAddress || accommodation.address}
         latitude={accommodation.latitude}
         longitude={accommodation.longitude}
       />
-      
       <LocalReviewSection data={accommodation} />
       <ReviewButton type="accommodation" isLocal={isLocal} />
       <ReviewsSection reviews={accommodation.reviews} />

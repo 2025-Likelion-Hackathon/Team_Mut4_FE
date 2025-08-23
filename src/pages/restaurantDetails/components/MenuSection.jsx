@@ -2,7 +2,6 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { useRestaurantDetailsStore } from '../../../stores/useRestaurantDetailsStore';
 
-// ... (styled-components 코드는 이전과 동일) ...
 const MenuContainer = styled.div`
   padding: 1rem 1.5rem;
   border-top: 10px solid #f0f0f0;
@@ -45,7 +44,6 @@ const NoMenuText = styled.p`
 const MenuSection = () => {
   const restaurant = useRestaurantDetailsStore((state) => state.restaurant);
 
-  // 🔽 menus 데이터가 없거나 비어있을 경우를 처리
   if (!restaurant || !restaurant.menus || restaurant.menus.length === 0) {
     return (
       <MenuContainer>

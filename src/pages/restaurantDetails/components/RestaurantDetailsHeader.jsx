@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { IoChevronBackOutline, IoBookmarkOutline, IoSearchOutline } from 'react-icons/io5';
+import { IoChevronBackOutline } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 
 const HeaderContainer = styled.div`
@@ -64,7 +64,7 @@ const ImageIndicator = styled.div`
   z-index: 10;
 `;
 
-const RestaurantDetailsHeader = ({ title = "가게 이름" }) => { // title prop을 받도록 수정
+const RestaurantDetailsHeader = ({ title = "가게 이름" }) => {
   const navigate = useNavigate();
 
   const handleGoBack = () => {

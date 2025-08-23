@@ -45,16 +45,15 @@ const DropdownItem = styled.li`
   }
 `;
 
-const FilterDropdown = () => {
+const FilterDropdown = ({ selectedFilter, onSelectFilter }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedFilter, setSelectedFilter] = useState('거리순');
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
   };
 
   const handleSelect = (filter) => {
-    setSelectedFilter(filter);
+    onSelectFilter(filter);
     setIsOpen(false);
   };
 

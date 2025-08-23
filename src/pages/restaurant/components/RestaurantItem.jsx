@@ -64,7 +64,7 @@ export const TagsWrapper = styled.div`
 
 export const Tag = styled.span`
   background-color: #f3f4f6;
-  color: #4b5563;
+  color: #4b5663;
   font-size: 0.875rem;
   font-weight: 500;
   padding: 0.25rem 0.625rem;
@@ -72,6 +72,8 @@ export const Tag = styled.span`
 `;
 
 const RestaurantItem = ({ restaurant }) => {
+  const category = restaurant.categoryName?.split('>')[1]?.trim() || restaurant.categoryName;
+
   return (
     <ItemContainer to={`/restaurant/${restaurant.id}`}>
       <ImagePlaceholder />
@@ -87,12 +89,18 @@ const RestaurantItem = ({ restaurant }) => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
           </AddressIcon>
-          <span>{restaurant.address}</span>
+          <span>{restaurant.roadAddress || restaurant.address}</span>
         </AddressWrapper>
         
         <TagsWrapper>
-          <Tag>{restaurant.discount}</Tag>
-          <Tag>{restaurant.rating}</Tag>
+          {category && <Tag>{category}</Tag>}
+          {restaurant.averageGrad && (
+            <Tag>
+              {restaurant.averageGrad === 'N/A' 
+                ? '인증 대기중' 
+                : `등급: ${restaurant.averageGrad}`}
+            </Tag>
+          )}
         </TagsWrapper>
       </ContentWrapper>
     </ItemContainer>

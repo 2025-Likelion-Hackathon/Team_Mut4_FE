@@ -1,60 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
+import axios from 'axios';
 import RestaurantItem from './RestaurantItem';
 import FilterDropdown from './FilterDropdown';
-
-// 더미 데이터
-const dummyRestaurants = [
-  {
-    id: 1,
-    name: '채선당 샤브보트 강남역점',
-    address: '서울 강남구 강남대로 378 . 지상1층',
-    discount: '5000원 절약',
-    rating: '인증 등급 A'
-  },
-  {
-    id: 2,
-    name: '채선당 샤브보트 강남역점',
-    address: '서울 강남구 강남대로 378 . 지상1층',
-    discount: '5000원 절약',
-    rating: '인증 등급 A'
-  },
-  {
-    id: 3,
-    name: '채선당 샤브보트 강남역점',
-    address: '서울 강남구 강남대로 378 . 지상1층',
-    discount: '5000원 절약',
-    rating: '인증 등급 A'
-  },
-  {
-    id: 4,
-    name: '채선당 샤브보트 강남역점',
-    address: '서울 강남구 강남대로 378 . 지상1층',
-    discount: '5000원 절약',
-    rating: '인증 등급 A'
-  },
-  {
-    id: 5,
-    name: '채선당 샤브보트 강남역점',
-    address: '서울 강남구 강남대로 378 . 지상1층',
-    discount: '5000원 절약',
-    rating: '인증 등급 A'
-  },
-  {
-    id: 6,
-    name: '채선당 샤브보트 강남역점',
-    address: '서울 강남구 강남대로 378 . 지상1층',
-    discount: '5000원 절약',
-    rating: '인증 등급 A'
-  },
-  {
-    id: 7,
-    name: '채선당 샤브보트 강남역점',
-    address: '서울 강남구 강남대로 378 . 지상1층',
-    discount: '5000원 절약',
-    rating: '인증 등급 A'
-  },
-];
+import { useLocationStore } from '../../../stores/useLocationStore';
 
 const ListContainer = styled.div`
   padding: 1rem;
@@ -67,17 +16,86 @@ const FilterContainer = styled.div`
   justify-content: flex-end;
 `;
 
+const LoadingText = styled.p`
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+`;
+
 const RestaurantList = () => {
+  const [restaurants, setRestaurants] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedFilter, setSelectedFilter] = useState('거리순');
+
+  const { locationId, userType } = useLocationStore();
+
+  useEffect(() => {
+    if (locationId) {
+      const fetchRestaurants = async () => {
+        try {
+          setIsLoading(true);
+          
+          let endpoint = `/locations/${locationId}/nearby-food-all`;
+          if (selectedFilter === '등급순') {
+            endpoint += '/grade';
+          }
+
+          const fullUrl = `${import.meta.env.VITE_API_BASE_URL}${endpoint}`;
+
+          const response = await axios.get(fullUrl, {
+            params: {
+              radius: 2000
+            },
+            timeout: 10000
+          });
+
+          setRestaurants(response.data);
+          setError(null);
+        } catch (err) {
+          console.error("Error fetching restaurants:", err);
+          setError("음식점 정보를 불러오는 데 실패했습니다.");
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchRestaurants();
+    } else {
+        setIsLoading(false);
+        setRestaurants([]);
+    }
+  }, [locationId, userType, selectedFilter]);
+
+  if (userType === 'local' && !locationId) {
+    return <LoadingText>위치 정보를 가져오는 중...</LoadingText>;
+  }
+
+  if (isLoading) {
+    return <LoadingText>음식점 정보를 불러오는 중...</LoadingText>;
+  }
+
+  if (error) {
+    return <LoadingText>{error}</LoadingText>;
+  }
+
   return (
     <div>
-        <FilterContainer>
-            <FilterDropdown />
-        </FilterContainer>
-        <ListContainer>
-            {dummyRestaurants.map(restaurant => (
+      <FilterContainer>
+        <FilterDropdown 
+          selectedFilter={selectedFilter}
+          onSelectFilter={setSelectedFilter}
+        />
+      </FilterContainer>
+      <ListContainer>
+        {restaurants.length > 0 ? (
+            restaurants.map(restaurant => (
                 <RestaurantItem key={restaurant.id} restaurant={restaurant} />
-            ))}
-        </ListContainer>
+            ))
+        ) : (
+            <LoadingText>주변에 음식점이 없습니다.</LoadingText>
+        )}
+      </ListContainer>
     </div>
   );
 };

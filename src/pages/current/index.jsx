@@ -15,12 +15,11 @@ function LocationAuthPage() {
     setLocationId,
     setAddress,
     locationId,
+
     address,
     userType,
     setUserType,
     setCityName,
-    // setLatitude,
-    // setLongitude,
   } = useLocationStore();
 
   // 위치 정보 가져오기 및 서버 전송 함수
@@ -35,11 +34,12 @@ function LocationAuthPage() {
 
       async (locationData) => {
         setLocation(locationData);
-        // setLatitude(locationData.latitude);
-        // setLongitude(locationData.longitude);
+
         // 서버에 위치 정보 전송
         try {
-          const result = await postCurrentLocation(
+          let result;
+
+          result = await postCurrentLocation(
             locationData.latitude,
             locationData.longitude
           );
@@ -71,14 +71,13 @@ function LocationAuthPage() {
         setLoading(false);
         console.error("위치 정보 가져오기 실패:", error);
       }
-      // 사용자 타입
     );
   };
 
   return (
     <div className="flex flex-col pl-4 gap-[120px] h-screen">
       <div className="flex flex-col justify-center h-[200px] text-[24px] font-bold mt-20">
-        <div>반가워요!</div>
+        <div className="text-[#01D281]">반가워요!</div>
         <div>여행하러 오셨나요?</div>
       </div>
       <div className="flex gap-5 w-full h-[200px] text-[16px] font-bold pr-4">
@@ -86,7 +85,7 @@ function LocationAuthPage() {
           to="/location"
           onClick={getCurrentLocation}
           onMouseEnter={() => setUserType("local")}
-          className={`w-1/2 h-full flex items-center justify-center bg-gray-200 rounded-lg ${
+          className={`w-1/2 h-full flex items-center justify-center  text-[#01D281] bg-[#C2FFE7] rounded-lg ${
             loading ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
@@ -96,8 +95,11 @@ function LocationAuthPage() {
         <Link
           to="/main"
           onClick={getCurrentLocation}
+          // onClick={() => {
+          //   setLocationId(2);
+          // }} // 테스트
           onMouseEnter={() => setUserType("tourist")}
-          className={`w-1/2 h-full flex items-center justify-center bg-gray-200 rounded-lg ${
+          className={`w-1/2 h-full flex items-center justify-center  text-[#01D281] bg-[#C2FFE7] rounded-lg ${
             loading ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >

@@ -1,25 +1,44 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import Home from "../assets/Iconex/Filled/Home.svg?react";
+import Guide from "../assets/Iconex/Filled/Message square.svg?react";
+import Map from "../assets/Map.svg?react";
+
 const Navbar = () => {
+  const location = useLocation();
+
+  // 현재 경로가 해당 메뉴와 일치하는지 확인하는 함수
+  const isActive = (path) => location.pathname === path;
+
+  // 활성/비활성 상태에 따른 색상 클래스 반환
+  const getTextColor = (path) =>
+    isActive(path) ? "text-[#01D281]" : "text-[#8F8F8F]";
+  const getIconClass = (path) =>
+    `w-6 h-6 mb-1 ${isActive(path) ? "text-[#01D281]" : "text-[#8F8F8F]"} [&>*]:fill-current [&>*]:stroke-current`;
   return (
-    <div className=" h-16 bg-gray-300 flex items-center justify-around text-sm text-gray-500">
-      {/* Nav Item 1 */}
+    <div className="h-16 bg-[#ffffff] flex items-center justify-around text-sm shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+      {/* Nav Item 1 - 홈 */}
       <div className="flex flex-col items-center">
-        <div className="w-6 h-6 bg-gray-500 rounded-full mb-1"></div>{" "}
-        {/* Icon Placeholder */}
-        <Link to="/main">Home</Link>
+        <Home className={getIconClass("/main")} />
+        <Link to="/main" className={getTextColor("/main")}>
+          홈
+        </Link>
       </div>
-      {/* Nav Item 2 */}
+
+      {/* Nav Item 2 - AI 가이드 */}
       <div className="flex flex-col items-center">
-        <div className="w-6 h-6 bg-gray-500 rounded-full mb-1"></div>{" "}
-        {/* Icon Placeholder */}
-        <Link to="/chatbot">여행 가이드</Link>
+        <Guide className={getIconClass("/chatbot")} />
+        <Link to="/chatbot" className={getTextColor("/chatbot")}>
+          AI 가이드
+        </Link>
       </div>
-      {/* Nav Item 3 */}
+
+      {/* Nav Item 3 - 현지인추천 */}
       <div className="flex flex-col items-center">
-        <div className="w-6 h-6 bg-gray-500 rounded-full mb-1"></div>{" "}
-        {/* Icon Placeholder */}
-        <Link to="/restaurant">현지인 추천</Link>
+        <Map className={getIconClass("/restaurant")} />
+        <Link to="/restaurant" className={getTextColor("/restaurant")}>
+          현지인추천
+        </Link>
       </div>
     </div>
   );

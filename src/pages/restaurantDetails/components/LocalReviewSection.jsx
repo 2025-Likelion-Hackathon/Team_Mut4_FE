@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { useRestaurantDetailsStore } from '../../../stores/useRestaurantDetailsStore';
 
 const ReviewContainer = styled.div`
   padding: 1.5rem;
@@ -89,30 +88,28 @@ const ReviewCount = styled.span`
   color: #333;
 `;
 
-const LocalReviewSection = () => {
-  const restaurant = useRestaurantDetailsStore((state) => state.restaurant);
-
-  if (!restaurant) return null;
+const LocalReviewSection = ({ data }) => {
+  if (!data) return null;
 
   const grades = ['E', 'D', 'C', 'B', 'A'];
   const gradeWidths = { E: 20, D: 40, C: 60, B: 80, A: 100 };
   
-  const currentGrade = restaurant.averageGrad; // 'N/A'일 수 있음
+  const currentGrade = data.averageGrade;
   const gradeWidth = gradeWidths[currentGrade] || 0;
+  const topTags = data.topTags || [];
 
   return (
     <ReviewContainer>
       <SectionTitle>현지인 리뷰</SectionTitle>
 
-      {/* 현지인 등급 섹션 */}
       <SectionBox>
-        {/* 🔽 수정된 부분 */}
+        {/* 🔽 이 부분이 수정되었습니다 🔽 */}
         {currentGrade === 'N/A' ? (
           <GradeTitle>현지인 등급 인증 대기중</GradeTitle>
         ) : (
           <>
             <GradeTitle>
-              현지인 등급 <span style={{ fontWeight: 'bold' }}>{currentGrade}</span> 가게예요
+              현지인 등급 <span style={{ fontWeight: 'bold' }}>{currentGrade}</span>
             </GradeTitle>
             <GradeBarWrapper>
               <GradeFill width={gradeWidth} />
@@ -126,10 +123,9 @@ const LocalReviewSection = () => {
         )}
       </SectionBox>
 
-      {/* topTags를 사용하여 리뷰 키워드를 표시 */}
-      {restaurant.topTags && restaurant.topTags.length > 0 && (
+      {topTags.length > 0 && (
         <SectionBox>
-          {restaurant.topTags.map((tag) => (
+          {topTags.map((tag) => (
             <ReviewItem key={tag.id}>
               <ReviewTextWrapper>
                 <ReviewIcon>👍</ReviewIcon>

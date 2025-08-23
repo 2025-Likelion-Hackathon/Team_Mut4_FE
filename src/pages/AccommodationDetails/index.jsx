@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from '@emotion/styled';
+import { useParams } from 'react-router-dom'; // 🔽 useParams 추가
 import RestaurantDetailsHeader from '../restaurantDetails/components/RestaurantDetailsHeader';
 import InfoSection from './components/InfoSection';
 import LocationSection from './components/LocationSection';
@@ -19,27 +20,51 @@ const Container = styled.div`
   height: calc(100vh - 200px);
 `;
 
+const LoadingText = styled.p`
+  text-align: center;
+  padding: 4rem;
+  font-size: 1.2rem;
+`;
+
 const AccommodationDetailsPage = () => {
-  const fetchAccommodationData = useAccommodationDetailsStore((state) => state.fetchAccommodationData);
-  const accommodation = useAccommodationDetailsStore((state) => state.accommodation);
-  const isLocal = useAccommodationDetailsStore((state) => state.isLocal);
+  const { id } = useParams(); // 🔽 URL에서 id 가져오기
+  const { accommodation, isLoading, error, fetchAccommodationData, isLocal } = useAccommodationDetailsStore();
 
   useEffect(() => {
-    fetchAccommodationData();
-  }, [fetchAccommodationData]);
+    if (id) {
+      fetchAccommodationData(id); // 🔽 id로 데이터 fetching
+    }
+  }, [id, fetchAccommodationData]);
 
+  // 🔽 로딩 및 에러 처리
+  if (isLoading) {
+    return <LoadingText>정보를 불러오는 중...</LoadingText>;
+  }
+
+  if (error) {
+    return <LoadingText>{error}</LoadingText>;
+  }
+  
   if (!accommodation) {
-    return null;
+    return <LoadingText>숙소 정보가 없습니다.</LoadingText>;
   }
 
   return (
     <Container>
       <RestaurantDetailsHeader title={accommodation.name} />
       <InfoSection />
-      <LocationSection />
-      <LocalReviewSection />
+      
+      {/* 🔽 이 부분이 수정되었습니다 🔽 */}
+      <LocationSection 
+        name={accommodation.name}
+        address={accommodation.roadAddress || accommodation.address}
+        latitude={accommodation.latitude}
+        longitude={accommodation.longitude}
+      />
+      
+      <LocalReviewSection data={accommodation} />
       <ReviewButton type="accommodation" isLocal={isLocal} />
-      <ReviewsSection />
+      <ReviewsSection reviews={accommodation.reviews} />
     </Container>
   );
 };

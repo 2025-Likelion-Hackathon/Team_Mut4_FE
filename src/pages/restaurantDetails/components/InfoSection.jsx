@@ -1,3 +1,5 @@
+// restaurantDetails/components/InfoSection.jsx
+
 import React from 'react';
 import styled from '@emotion/styled';
 import { IoLocationOutline, IoCallOutline } from 'react-icons/io5';
@@ -60,7 +62,6 @@ const InfoSection = () => {
 
   if (!restaurant) return null;
 
-  // 🔽 categoryName에서 카테고리 부분만 추출
   const category = restaurant.categoryName?.split('>').pop().trim() || '';
 
   return (
@@ -69,19 +70,17 @@ const InfoSection = () => {
         <InfoTitle>{restaurant.name}</InfoTitle>
         <LikeButton>🤍</LikeButton>
       </TitleWrapper>
-      {/* 🔽 restaurant.category 대신 category 변수 사용 */}
       <Category>{category}</Category>
       <DetailInfo>
         <InfoRow>
           <IoLocationOutline />
-          {/* 🔽 roadAddress를 우선으로 표시 */}
           <span>{restaurant.roadAddress || restaurant.address}</span>
         </InfoRow>
         <InfoRow>
           <IoCallOutline />
-          <span>{restaurant.phone}</span>
+          {/* 🔽 이 부분이 수정되었습니다 🔽 */}
+          <span>{restaurant.phone || '해당 정보가 없습니다.'}</span>
         </InfoRow>
-        {/* 🔽 instagram 필드는 API 응답에 없으므로 제거 */}
       </DetailInfo>
     </InfoContainer>
   );

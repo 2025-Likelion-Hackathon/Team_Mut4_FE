@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
 
 const LocationContainer = styled.div`
@@ -15,23 +15,40 @@ const SectionTitle = styled.h2`
   margin-bottom: 1rem;
 `;
 
-const MapPlaceholder = styled.div`
+const MapDiv = styled.div`
   width: 100%;
   height: 200px;
-  background-color: #e0e0e0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #888;
-  font-size: 0.9rem;
   border-radius: 8px;
 `;
 
-const LocationSection = () => {
+const LocationSection = ({ latitude, longitude }) => {
+  const mapContainerRef = useRef(null);
+
+  useEffect(() => {
+    if (window.kakao && window.kakao.maps) {
+      window.kakao.maps.load(() => {
+        const mapContainer = mapContainerRef.current;
+        if (!mapContainer) return;
+
+        const mapOption = {
+          center: new window.kakao.maps.LatLng(latitude, longitude),
+          level: 2, 
+        };
+        const map = new window.kakao.maps.Map(mapContainer, mapOption);
+
+        const markerPosition = new window.kakao.maps.LatLng(latitude, longitude);
+        const marker = new window.kakao.maps.Marker({
+          position: markerPosition
+        });
+        marker.setMap(map);
+      });
+    }
+  }, [latitude, longitude]);
+
   return (
     <LocationContainer>
       <SectionTitle>위치</SectionTitle>
-      <MapPlaceholder>(지도)</MapPlaceholder>
+      <MapDiv ref={mapContainerRef} />
     </LocationContainer>
   );
 };

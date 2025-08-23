@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
-// 🔽 1. Zustand 스토어를 import 합니다.
-import { useRestaurantDetailsStore } from '../../../stores/useRestaurantDetailsStore';
 
 const ReviewsContainer = styled.div`
   padding: 1.5rem;
@@ -87,13 +85,13 @@ const NoReviewText = styled.p`
   color: #888;
 `;
 
-const ReviewsSection = () => {
+const ReviewsSection = ({ reviews = [] }) => {
   const [activeTab, setActiveTab] = useState('recommended');
   const [expandedReviews, setExpandedReviews] = useState({});
 
-  // 🔽 2. 스토어에서 restaurant 데이터를 가져옵니다.
-  const restaurant = useRestaurantDetailsStore((state) => state.restaurant);
-  const reviews = restaurant?.reviews || [];
+  // 🔽 스토어 직접 호출 코드를 삭제하고 props를 그대로 사용합니다.
+  // const restaurant = useRestaurantDetailsStore((state) => state.restaurant);
+  // const reviews = restaurant?.reviews || [];
 
   const toggleExpand = (id) => {
     setExpandedReviews((prev) => ({
@@ -102,7 +100,6 @@ const ReviewsSection = () => {
     }));
   };
   
-  // 🔽 3. 리뷰가 없을 경우를 처리합니다.
   if (reviews.length === 0) {
     return (
         <ReviewsContainer>
@@ -126,10 +123,8 @@ const ReviewsSection = () => {
         </Tab>
       </TabBar>
 
-      {/* 🔽 4. dummyReviews 대신 API로 받은 reviews 배열을 매핑합니다. */}
       {reviews.map((review) => {
         const isExpanded = expandedReviews[review.id];
-        // API의 content 필드 길이를 확인합니다.
         const displayMoreButton = review.content.length > 150; 
         const displayText = isExpanded || !displayMoreButton
           ? review.content
@@ -140,15 +135,10 @@ const ReviewsSection = () => {
             <ReviewHeader>
               <UserInfo>
                 <UserAvatar />
-                {/* API의 username 필드를 사용합니다. */}
                 <Nickname>{review.username}</Nickname>
               </UserInfo>
-              {/* API 응답에 location 정보가 없으므로 버튼 제거 */}
             </ReviewHeader>
             
-            {/* API 응답에 images 정보가 없으므로 이미지 섹션 제거 */}
-
-            {/* API의 content 필드를 사용합니다. */}
             <ReviewText>{displayText}</ReviewText>
             {displayMoreButton && (
               <MoreButton onClick={() => toggleExpand(review.id)}>

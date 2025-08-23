@@ -60,15 +60,16 @@ const RestaurantDetailPage = () => {
 
   return (
     <Container>
-      {/* 🔽 5. 헤더에 음식점 이름을 prop으로 전달합니다. */}
       <RestaurantDetailsHeader title={restaurant.name} />
       <ContentWrapper>
         <InfoSection />
         <MenuSection />
-        <LocalReviewSection />
+        {/* 🔽 LocalReviewSection에 props로 데이터 전달 */}
+        <LocalReviewSection data={restaurant} />
       </ContentWrapper>
       <ReviewButton type="restaurant" isLocal={isLocal} />
-      <ReviewsSection />
+      {/* 🔽 ReviewsSection에 props로 데이터 전달 */}
+      <ReviewsSection reviews={restaurant.reviews} />
     </Container>
   );
 };

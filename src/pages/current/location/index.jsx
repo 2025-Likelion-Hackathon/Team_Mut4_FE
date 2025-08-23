@@ -60,12 +60,14 @@ const index = () => {
         </div>
         <div className="flex flex-col justify-center items-center bottom-0 gap-[30px] w-full h-[200px] bg-white rounded-t-2xl p-4">
           <div className="flex gap-2 items-center text-center">
-            <div className="text-bold text-[26px]">{address}</div>
+            <div className="text-bold text-[#01D281] text-[26px]">
+              {address}
+            </div>
             <div className="text-[22px] text-medium">에 살고 계시네요!</div>
           </div>
           <Link
             to="/main"
-            className="w-full h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center mt-4"
+            className="w-full h-12 rounded-[8px] bg-[#01D281] text-white flex items-center justify-center mt-4"
           >
             시작하기
           </Link>

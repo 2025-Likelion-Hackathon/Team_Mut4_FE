@@ -17,13 +17,13 @@ function MainPage() {
       <Chat /> {/* Ai 챗봇 대화 기록 연동 필요 */}
       <div className="bg-gray-100 flex flex-col h-auto">
         <div className="flex  items-center p-4  gap-[13px]">
-          <div className="text-[19px] font-bold ">
-            <Pin className="inline-block mr-2" />
+          <div className="text-[19px] font-bold text-[#01D281]">
+            <Pin className="inline-block mr-2 " />
             {address} {/* 여행지 추천 페이지로 이동 */}
           </div>
           <Link
             to="/destination"
-            className="w-[auto] h-[auto] text-[12px] bg-white rounded-[8px]  p-2 "
+            className="w-[auto] h-[auto]  text-[12px] bg-white rounded-[8px]  p-2 "
           >
             여행지 선택
           </Link>

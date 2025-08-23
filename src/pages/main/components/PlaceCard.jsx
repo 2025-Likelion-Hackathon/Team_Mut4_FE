@@ -9,9 +9,9 @@ const PlaceCard = ({ address, name, price }) => {
     <div className="flex flex-col bg-white w-[156px] h-[199px] gap-[20px]  border-[1px] rounded-[8px]  mt-[27px] pt-[13px] pl-[10px]">
       <div className="flex flex-col gap-[70px] ">
         <div className="flex justify-between pr-2">
-          <div className="flex flex-col gap-[5px]">
-            <div className="text-[15px] font-bold">{name} </div>
-            <div className="text-[12px]">{address} </div>
+          <div className="flex flex-col gap-[5px] w-[120px] ">
+            <div className="text-[15px] font-bold w-full h-[23px]">{name} </div>
+            <div className="text-[12px] w-full h-[40px] ">{address} </div>
           </div>
           {/* 북마크 아이콘 눌렀을시 찜 전용 api 연동 필요 */}
           <Mark />

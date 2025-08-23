@@ -14,7 +14,7 @@ const index = () => {
           return;
         }
 
-        const data = await GetNearAccomodation(locationId); // locationId, 반경 설정 필요
+        const data = await GetNearAccomodation(2); // locationId, 반경 설정 필요
         setPlaceContent(data);
       } catch (error) {
         console.error("Error fetching nearby accommodation:", error);

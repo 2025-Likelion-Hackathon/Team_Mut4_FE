@@ -22,6 +22,7 @@ const Container = styled.div`
 const AccommodationDetailsPage = () => {
   const fetchAccommodationData = useAccommodationDetailsStore((state) => state.fetchAccommodationData);
   const accommodation = useAccommodationDetailsStore((state) => state.accommodation);
+  const isLocal = useAccommodationDetailsStore((state) => state.isLocal);
 
   useEffect(() => {
     fetchAccommodationData();
@@ -37,7 +38,7 @@ const AccommodationDetailsPage = () => {
       <InfoSection />
       <LocationSection />
       <LocalReviewSection />
-      <ReviewButton />
+      <ReviewButton type="accommodation" isLocal={isLocal} />
       <ReviewsSection />
     </Container>
   );

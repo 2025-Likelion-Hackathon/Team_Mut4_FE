@@ -62,11 +62,24 @@ const GradeLabel = styled.span`
 
 const gradePoints = ['E', 'D', 'C', 'B', 'A'];
 
-const GradeSlider = () => {
+const GradeSlider = ({ value, onChange }) => {
   const [sliderPosition, setSliderPosition] = useState(0);
-  const [currentGrade, setCurrentGrade] = useState('C');
   const sliderRef = useRef(null);
   const isDragging = useRef(false);
+
+  const updateGradeByPosition = (position) => {
+    const slider = sliderRef.current;
+    if (!slider) return;
+
+    const rect = slider.getBoundingClientRect();
+    const stepWidth = rect.width / (gradePoints.length - 1);
+    const gradeIndex = Math.round(position / stepWidth);
+    const newGrade = gradePoints[gradeIndex];
+
+    if (value !== newGrade) {
+      onChange(newGrade);
+    }
+  };
 
   const handleDragStart = (e) => {
     isDragging.current = true;
@@ -75,20 +88,16 @@ const GradeSlider = () => {
 
   const handleDragMove = (e) => {
     if (!isDragging.current) return;
-
     const slider = sliderRef.current;
     if (!slider) return;
 
     const rect = slider.getBoundingClientRect();
-    const clientX = e.clientX || e.touches[0].clientX;
+    const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
     let newPosition = clientX - rect.left;
-
     newPosition = Math.max(0, Math.min(newPosition, rect.width));
-    setSliderPosition(newPosition);
 
-    const stepWidth = rect.width / (gradePoints.length - 1);
-    const gradeIndex = Math.round(newPosition / stepWidth);
-    setCurrentGrade(gradePoints[gradeIndex]);
+    setSliderPosition(newPosition);
+    updateGradeByPosition(newPosition);
   };
 
   const handleDragEnd = () => {
@@ -97,24 +106,24 @@ const GradeSlider = () => {
 
   useEffect(() => {
     const slider = sliderRef.current;
-    if (!slider) return;
+    if (slider) {
+      const rect = slider.getBoundingClientRect();
+      const gradeIndex = gradePoints.indexOf(value);
+      if (gradeIndex !== -1) {
+        const newPosition = (rect.width / (gradePoints.length - 1)) * gradeIndex;
+        setSliderPosition(newPosition);
+      }
+    }
 
-    const rect = slider.getBoundingClientRect();
-    const initialIndex = gradePoints.indexOf(currentGrade);
-    const initialPosition = (rect.width / (gradePoints.length - 1)) * initialIndex;
-    setSliderPosition(initialPosition);
-
-    const handleMouseMove = (e) => handleDragMove(e);
-    const handleMouseUp = () => handleDragEnd();
-
-    slider.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
+    const handleUp = () => handleDragEnd();
+    window.addEventListener('mousemove', handleDragMove);
+    window.addEventListener('mouseup', handleUp);
 
     return () => {
-      slider.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('mousemove', handleDragMove);
+      window.removeEventListener('mouseup', handleUp);
     };
-  }, [currentGrade]);
+  }, [value]);
 
   return (
     <GradeSliderContainer>
@@ -131,7 +140,7 @@ const GradeSlider = () => {
       </SliderWrapper>
       <GradeLabels>
         {gradePoints.map((grade) => (
-          <GradeLabel key={grade} style={{ fontWeight: grade === currentGrade ? 'bold' : 'normal' }}>
+          <GradeLabel key={grade} style={{ fontWeight: grade === value ? 'bold' : 'normal' }}>
             {grade}
           </GradeLabel>
         ))}

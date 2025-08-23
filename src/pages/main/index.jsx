@@ -11,14 +11,17 @@ import { useLocationStore } from "../../stores/uselocationStore";
 
 function MainPage() {
   const { userType, locationId, address, setCityName } = useLocationStore();
+  console.log("userType:", userType);
+  console.log("locationId:", locationId);
 
+  console.log("address:", address);
   return (
     <div className="flex flex-col h-full bg-white">
       <Chat /> {/* Ai 챗봇 대화 기록 연동 필요 */}
       <div className="bg-gray-100 flex flex-col h-auto">
         <div className="flex  items-center p-4  gap-[13px]">
           <div className="text-[19px] font-bold text-[#01D281]">
-            <Pin className="inline-block mr-2 " />
+            <Pin className="inline-block mr-2" />
             {address} {/* 여행지 추천 페이지로 이동 */}
           </div>
           <Link

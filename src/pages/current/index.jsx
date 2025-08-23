@@ -15,10 +15,12 @@ function LocationAuthPage() {
     setLocationId,
     setAddress,
     locationId,
+
     address,
     userType,
     setUserType,
     setCityName,
+
     // setLatitude,
     // setLongitude,
   } = useLocationStore();
@@ -39,7 +41,9 @@ function LocationAuthPage() {
         // setLongitude(locationData.longitude);
         // 서버에 위치 정보 전송
         try {
-          const result = await postCurrentLocation(
+          let result;
+
+          result = await postCurrentLocation(
             locationData.latitude,
             locationData.longitude
           );

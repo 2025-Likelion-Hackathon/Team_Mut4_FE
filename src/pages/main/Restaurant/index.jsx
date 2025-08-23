@@ -15,7 +15,7 @@ const index = () => {
           return;
         }
 
-        const data = await GetNearFood(1); // locationId, 반경 설정 필요
+        const data = await GetNearFood(locationId); // locationId, 반경 설정 필요
         setPlaceContent(data);
       } catch (error) {
         console.error("Error fetching nearby food:", error);

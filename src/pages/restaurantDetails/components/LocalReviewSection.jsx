@@ -88,16 +88,65 @@ const ReviewCount = styled.span`
   color: #333;
 `;
 
-const LocalReviewSection = ({ data }) => {
+const PriceComparisonTitle = styled.h3`
+  font-size: 1rem;
+  font-weight: 500;
+  color: #374151;
+  text-align: center;
+  margin-bottom: 1rem;
+
+  span {
+    color: #10b981; /* 강조 색상 */
+    font-weight: bold;
+  }
+`;
+
+const PriceBoxesWrapper = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+`;
+
+const PriceBox = styled.div`
+  flex: 1;
+  padding: 0.8rem;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: ${({ isAverage }) => (isAverage ? '#e5e7eb' : '#a7f3d0')};
+  color: ${({ isAverage }) => (isAverage ? '#4b5563' : '#064e3b')};
+  border: 1px solid ${({ isAverage }) => (isAverage ? 'transparent' : '#6ee7b7')};
+`;
+
+const LocalReviewSection = ({ data, type }) => {
   if (!data) return null;
 
   const grades = ['E', 'D', 'C', 'B', 'A'];
   const gradeWidths = { E: 20, D: 40, C: 60, B: 80, A: 100 };
   
   const currentGrade = data.averageGrade;
-  console.log(currentGrade);
   const gradeWidth = gradeWidths[currentGrade] || 0;
   const topTags = data.topTags || [];
+
+  const price = data.restaurantPrice || data.accommodationPrice;
+  const regionAveragePrice = data.regionRestaurantAveragePrice || data.regionAccommodationAveragePrice;
+  
+  const showPriceInfo = price != null && regionAveragePrice != null && regionAveragePrice > 0;
+
+  let comparisonText = '';
+  if (showPriceInfo) {
+    const difference = regionAveragePrice - price;
+    const formattedDiff = Math.abs(difference).toLocaleString('ko-KR');
+
+    if (difference > 0) {
+      comparisonText = <>평균 가격에서 <span>{formattedDiff}원</span> 더 싸요</>;
+    } else if (difference < 0) {
+      comparisonText = <>평균 가격에서 <span>{formattedDiff}원</span> 더 비싸요</>;
+    } else {
+      comparisonText = '지역 평균 가격과 같아요';
+    }
+  }
 
   return (
     <ReviewContainer>
@@ -110,6 +159,7 @@ const LocalReviewSection = ({ data }) => {
           <>
             <GradeTitle>
               현지인 등급 <span style={{ fontWeight: 'bold' }}>{currentGrade}</span>
+              {type === 'restaurant' ? ' 가게에요' : ' 숙소에요'}
             </GradeTitle>
             <GradeBarWrapper>
               <GradeFill width={gradeWidth} />
@@ -123,10 +173,24 @@ const LocalReviewSection = ({ data }) => {
         )}
       </SectionBox>
 
+      {showPriceInfo && (
+        <SectionBox>
+          <PriceComparisonTitle>{comparisonText}</PriceComparisonTitle>
+          <PriceBoxesWrapper>
+            <PriceBox isAverage>
+              평균 {regionAveragePrice.toLocaleString('ko-KR')}원
+            </PriceBox>
+            <PriceBox>
+              {price.toLocaleString('ko-KR')}원
+            </PriceBox>
+          </PriceBoxesWrapper>
+        </SectionBox>
+      )}
+
       {topTags.length > 0 && (
         <SectionBox>
           {topTags.map((tag) => (
-            <ReviewItem key={tag.id}>
+            <ReviewItem key={tag.tagName}>
               <ReviewTextWrapper>
                 <ReviewIcon>👍</ReviewIcon>
                 <ReviewTypeText>{tag.tagName}</ReviewTypeText>

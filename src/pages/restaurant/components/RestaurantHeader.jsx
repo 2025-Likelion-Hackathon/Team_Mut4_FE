@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import { IoChevronBackOutline } from "react-icons/io5";
 import { FiBookmark } from "react-icons/fi";
+import { useLocationStore } from '../../../stores/uselocationStore'; 
+import { useRestaurantListStore } from '../../../stores/useRestaurantListStore';
+import { useAccommodationListStore } from '../../../stores/useAccommodationListStore';
+import { useMoreTabStore } from '../../../stores/useMoreTabStore';
+import { useUIStore } from '../../../stores/useUIStore';
 
 const HeaderContainer = styled.div`
   padding: 1rem;
@@ -21,9 +26,10 @@ const IconButton = styled.button`
   border: none;
   background: none;
   cursor: pointer;
+  font-size: 1.5rem;
 `;
 
-const SearchInputContainer = styled.div`
+const SearchForm = styled.form`
   position: relative;
   flex-grow: 1;
   margin: 0 1rem;
@@ -51,30 +57,55 @@ const SearchIcon = styled.svg`
   color: #9ca3af;
 `;
 
-const RestaurantHeader = () => {
+const RestaurantHeader = ({ type }) => {
   const navigate = useNavigate();
+  const [keyword, setKeyword] = useState('');
+  const { locationId } = useLocationStore();
 
-  const handleGoBack = () => {
-    navigate(-1);
+  const activeTab = useMoreTabStore((state) => state.activeTab);
+
+  const searchAction = type === 'restaurant'
+    ? useRestaurantListStore((state) => state.searchRestaurants)
+    : useAccommodationListStore((state) => state.searchAccommodations);
+
+  useEffect(() => {
+    setKeyword('');
+  }, [activeTab]);
+
+  const { openBookmarkSidebar } = useUIStore();
+
+  const handleGoBack = () => navigate(-1);
+  
+  const handleOpenBookmarkSidebar = () => {
+    openBookmarkSidebar();
   };
 
-  const handleGoToBookmark = () => {
-    navigate('/bookmark');
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (!keyword.trim()) {
+      alert('검색어를 입력해주세요.');
+      return;
+    }
+    searchAction(locationId, keyword);
   };
 
   return (
     <HeaderContainer>
       <HeaderInner>
-        <IconButton onClick={handleGoBack}>
-          <IoChevronBackOutline />
-        </IconButton>
-        <SearchInputContainer>
-          <SearchInput type="text" placeholder=" " />
+        <IconButton onClick={handleGoBack}><IoChevronBackOutline /></IconButton>
+        <SearchForm onSubmit={handleSearch}>
+          <SearchInput 
+            type="text" 
+            placeholder={type === 'restaurant' ? '음식점 검색' : '숙소 검색'} 
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+          />
           <SearchIcon fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </SearchIcon>
-        </SearchInputContainer>
-        <IconButton onClick={handleGoToBookmark}>
+        </SearchForm>
+
+        <IconButton onClick={handleOpenBookmarkSidebar}>
           <FiBookmark />
         </IconButton>
       </HeaderInner>

@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { BsBookmark, BsBookmarkFill } from 'react-icons/bs';
+import { useLocationStore } from '../../../stores/uselocationStore';
 
 export const ItemContainer = styled(Link)`
   display: flex;
@@ -91,6 +92,8 @@ export const Tag = styled.span`
 `;
 
 const RestaurantItem = ({ restaurant, onBookmarkChange }) => {
+  const { locationId } = useLocationStore();
+  
   const { 
     name, placeName, 
     roadAddress, roadAddressName, 

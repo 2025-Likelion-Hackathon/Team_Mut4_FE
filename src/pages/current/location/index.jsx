@@ -7,42 +7,39 @@ import { Link } from "react-router-dom";
 const index = () => {
   const { address } = useLocationStore();
   const [mapHeight, setMapHeight] = useState(410);
-
-  // 화면 너비에 따른 지도 높이 계산
-  const calculateMapHeight = () => {
-    const width = window.innerWidth;
+  const [bottomHeight, setBottomHeight] = useState(200);
+  // 화면 크기에 따른 지도 높이와 하단 높이 계산
+  const calculateHeights = () => {
     const height = window.innerHeight;
+    const headerHeight = 58; // 헤더 높이
+    const availableHeight = height - headerHeight;
 
-    if (width === 420 && height === 900) {
-      return 723;
-    } else if (width === 414 && height === 896) {
-      return 640;
-    } else if (width === 390 && height === 844) {
-      return 590;
-    } else if (width === 375 && height === 667) {
-      return 410;
-    } else if (width === 430 && height === 932) {
-      return 674;
-    } else {
-      return 723; // 기본값
-    }
+    const calculatedMapHeight = Math.floor(availableHeight * 0.75);
+    const calculatedBottomHeight = availableHeight - calculatedMapHeight;
+
+    return {
+      mapHeight: calculatedMapHeight,
+      bottomHeight: calculatedBottomHeight,
+    };
   };
 
   // 컴포넌트 마운트 시와 화면 크기 변경 시 높이 업데이트
   useEffect(() => {
-    const updateHeight = () => {
-      setMapHeight(calculateMapHeight());
+    const updateHeights = () => {
+      const { mapHeight, bottomHeight } = calculateHeights();
+      setMapHeight(mapHeight);
+      setBottomHeight(bottomHeight);
     };
 
     // 초기 높이 설정
-    updateHeight();
+    updateHeights();
 
     // 리사이즈 이벤트 리스너 추가
-    window.addEventListener("resize", updateHeight);
+    window.addEventListener("resize", updateHeights);
 
     // 클린업
     return () => {
-      window.removeEventListener("resize", updateHeight);
+      window.removeEventListener("resize", updateHeights);
     };
   }, []);
 
@@ -55,10 +52,13 @@ const index = () => {
         <div className="ml-[32%] font-bold">내 동네 설정</div>
       </div>
       <div className="w-full h-full bg-white flex-1 flex flex-col relative">
-        <div className="flex-1 h-0">
+        <div className={`flex-1 h-[${mapHeight}px]`}>
           <KakaoSearchMap defaultKeyword={address} height={mapHeight} />
         </div>
-        <div className="flex flex-col justify-center items-center bottom-0 gap-[30px] w-full h-[200px] bg-white rounded-t-2xl p-4">
+        <div
+          className="flex flex-col justify-center items-center bottom-0 gap-[10%] w-full bg-white rounded-t-2xl p-4 transition-all duration-300 ease-in-out"
+          style={{ height: bottomHeight }}
+        >
           <div className="flex gap-2 items-center text-center">
             <div className="text-bold text-[#01D281] text-[26px]">
               {address}

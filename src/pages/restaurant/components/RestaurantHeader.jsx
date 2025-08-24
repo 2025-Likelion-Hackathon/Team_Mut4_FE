@@ -11,8 +11,8 @@ import { useUIStore } from '../../../stores/useUIStore';
 
 const HeaderContainer = styled.div`
   padding: 0.5rem 1rem;
-  background-color: #f8f9fa; /* 배경색 추가 */
-  border-bottom: 1px solid #e9ecef; /* 구분선 추가 */
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
 `;
 
 const HeaderInner = styled.div`
@@ -40,10 +40,10 @@ const SearchForm = styled.form`
 
 const SearchInput = styled.input`
   width: 100%;
-  padding: 0.6rem 2.5rem 0.6rem 1rem; /* 패딩 조정 */
-  border: 1px solid #ced4da; /* 테두리 추가 */
-  background-color: #ffffff; /* 배경 흰색으로 변경 */
-  border-radius: 8px; /* 모서리 둥글기 조정 */
+  padding: 0.6rem 2.5rem 0.6rem 1rem;
+  border: 1px solid #ced4da;
+  background-color: #ffffff;
+  border-radius: 8px;
   font-size: 1rem;
   &:focus {
     outline: none;
@@ -56,7 +56,7 @@ const SearchIcon = styled.svg`
   height: 1.25rem;
   width: 1.25rem;
   position: absolute;
-  right: 0.75rem; /* 오른쪽으로 위치 변경 */
+  right: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
   color: #6c757d;

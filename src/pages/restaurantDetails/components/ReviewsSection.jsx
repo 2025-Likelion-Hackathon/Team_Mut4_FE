@@ -16,7 +16,7 @@ const Tab = styled.button`
   border: none;
   font-size: 1rem;
   font-weight: bold;
-  color: ${(props) => (props.active ? '#333' : '#a9a9a9')};
+  color: ${(props) => (props.active ? '#01D281' : '#a9a9a9')};
   cursor: pointer;
   padding: 0.5rem 0;
   margin-right: 1rem;
@@ -28,7 +28,7 @@ const Tab = styled.button`
     left: 0;
     width: 100%;
     height: 3px;
-    background-color: ${(props) => (props.active ? '#333' : 'transparent')};
+    background-color: ${(props) => (props.active ? '#01D281' : 'transparent')};
   }
 `;
 

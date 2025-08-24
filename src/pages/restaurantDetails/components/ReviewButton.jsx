@@ -13,12 +13,11 @@ const Button = styled.button`
   color: #fff;
   transition: background-color 0.2s ease;
 
-  /* disabled 속성이 true일 때의 스타일을 정의합니다. */
-  background-color: ${({ disabled }) => (disabled ? '#b0b0b0' : '#5186f9')};
+  background-color: ${({ disabled }) => (disabled ? '#adb5bd' : '#01D281')};
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
 
   &:hover {
-    background-color: ${({ disabled }) => (disabled ? '#b0b0b0' : '#4a7ae8')};
+    background-color: ${({ disabled }) => (disabled ? '#adb5bd' : '#2cb982')};
   }
 `;
 
@@ -33,7 +32,7 @@ const ReviewButton = ({ type, isLocal }) => {
 
   return (
     <Button onClick={handleNavigate} disabled={!isLocal}>
-      {isLocal ? '이 장소 리뷰쓰기' : '현지인 인증 필요'}
+      {isLocal ? '리뷰 쓰러 가기' : '현지인 인증 필요'}
     </Button>
   );
 };

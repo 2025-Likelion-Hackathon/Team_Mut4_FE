@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import axios from 'axios';
 import AccommodationItem from './AccommodationItem';
 import FilterDropdown from '../../restaurant/components/FilterDropdown';
-import { useLocationStore } from '../../../stores/useLocationStore';
+import { useLocationStore } from '../../../stores/uselocationStore';
 
 const ListContainer = styled.div`
   padding: 1rem;
@@ -14,6 +14,8 @@ const ListContainer = styled.div`
 const FilterContainer = styled.div`
   display: flex;
   justify-content: flex-end;
+  position: relative;
+  z-index: 20; 
 `;
 
 const LoadingText = styled.p`
@@ -36,16 +38,30 @@ const AccommodationList = () => {
         try {
           setIsLoading(true);
           
-          const endpoint = `/locations/${locationId}/nearby-accommodation-all`;
-          const fullUrl = `${import.meta.env.VITE_API_BASE_URL}${endpoint}`;
+          const allAccommodationsEndpoint = `/locations/${locationId}/nearby-accommodation-all`;
+          const bookmarksEndpoint = `/location-accommodation-bookmarks/${locationId}`;
 
-          const response = await axios.get(fullUrl, {
-            params: { radius: 2000 },
-            timeout: 10000,
-          });
+          const allAccommodationsUrl = `${import.meta.env.VITE_API_BASE_URL}${allAccommodationsEndpoint}`;
+          const bookmarksUrl = `${import.meta.env.VITE_API_BASE_URL}${bookmarksEndpoint}`;
 
-          setAccommodations(response.data);
+          const [allAccommodationsResponse, bookmarksResponse] = await Promise.all([
+            axios.get(allAccommodationsUrl, { params: { radius: 2000 }, timeout: 10000 }),
+            axios.get(bookmarksUrl)
+          ]);
+
+          const allAccommodations = allAccommodationsResponse.data;
+          const bookmarkedAccommodations = bookmarksResponse.data;
+
+          const bookmarkedIdSet = new Set(bookmarkedAccommodations.map(b => b.id));
+
+          const mergedAccommodations = allAccommodations.map(accommodation => ({
+            ...accommodation,
+            isBookmarked: bookmarkedIdSet.has(accommodation.id)
+          }));
+
+          setAccommodations(mergedAccommodations);
           setError(null);
+          
         } catch (err) {
           console.error("Error fetching accommodations:", err);
           setError("숙소 정보를 불러오는 데 실패했습니다.");
@@ -60,6 +76,14 @@ const AccommodationList = () => {
       setAccommodations([]);
     }
   }, [locationId, selectedFilter]);
+
+  const handleBookmarkChange = (accommodationId, newBookmarkStatus) => {
+    setAccommodations(currentAccommodations => 
+      currentAccommodations.map(acc => 
+        acc.id === accommodationId ? { ...acc, isBookmarked: newBookmarkStatus } : acc
+      )
+    );
+  };
 
   if (!locationId) {
     return <LoadingText>위치 정보를 가져오는 중...</LoadingText>;
@@ -83,11 +107,15 @@ const AccommodationList = () => {
         </FilterContainer>
         <ListContainer>
             {accommodations.length > 0 ? (
-                accommodations.map(item => (
-                    <AccommodationItem key={item.id} accommodation={item} />
-                ))
+              accommodations.map(accommodation => (
+                <AccommodationItem 
+                  key={accommodation.id} 
+                  accommodation={accommodation}
+                  onBookmarkChange={handleBookmarkChange} 
+                />
+              ))
             ) : (
-                <LoadingText>주변에 숙소가 없습니다.</LoadingText>
+              <LoadingText>주변에 숙소가 없습니다.</LoadingText>
             )}
         </ListContainer>
     </div>

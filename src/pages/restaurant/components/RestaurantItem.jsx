@@ -1,6 +1,9 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { useLocationStore } from '../../../stores/uselocationStore';
+import { BsBookmark, BsBookmarkFill } from 'react-icons/bs';
 
 export const ItemContainer = styled(Link)`
   display: flex;
@@ -9,6 +12,7 @@ export const ItemContainer = styled(Link)`
   border-bottom: 1px solid #e5e7eb;
   text-decoration: none;
   color: inherit;
+  position: relative;
 `;
 
 export const ImagePlaceholder = styled.div`
@@ -38,9 +42,17 @@ export const RestaurantName = styled.h3`
   font-size: 1.125rem;
 `;
 
-export const Checkbox = styled.input`
-  width: 1.25rem;
-  height: 1.25rem;
+export const BookmarkButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  font-size: 1.25rem;
+  color: #4b5663;
+  z-index: 10;
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
 `;
 
 export const AddressWrapper = styled.div`
@@ -71,8 +83,40 @@ export const Tag = styled.span`
   border-radius: 9999px;
 `;
 
-const RestaurantItem = ({ restaurant }) => {
+const RestaurantItem = ({ restaurant, onBookmarkChange }) => {
   const category = restaurant.categoryName?.split('>')[1]?.trim() || restaurant.categoryName;
+  const { locationId } = useLocationStore();
+
+  const handleBookmarkClick = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (restaurant.isBookmarked) {
+      alert('이미 북마크된 항목입니다.');
+      return;
+    }
+
+    if (!locationId || !restaurant.id) {
+      alert('필요한 정보가 없습니다.');
+      return;
+    }
+
+    const foodId = restaurant.id;
+    const endpoint = `${import.meta.env.VITE_API_BASE_URL}/location-food-bookmarks`;
+    const params = { locationId, foodId };
+
+    try {
+      await axios.post(endpoint, null, { params });
+      alert('북마크에 추가되었습니다.');
+      
+      if (onBookmarkChange) {
+        onBookmarkChange(foodId, true);
+      }
+    } catch (error) {
+      console.error('북마크 추가 실패:', error);
+      alert('북마크 추가에 실패했습니다.');
+    }
+  };
 
   return (
     <ItemContainer to={`/restaurant/${restaurant.id}`}>
@@ -81,7 +125,6 @@ const RestaurantItem = ({ restaurant }) => {
       <ContentWrapper>
         <HeaderWrapper>
           <RestaurantName>{restaurant.name}</RestaurantName>
-          <Checkbox type="checkbox" />
         </HeaderWrapper>
         
         <AddressWrapper>
@@ -103,6 +146,10 @@ const RestaurantItem = ({ restaurant }) => {
           )}
         </TagsWrapper>
       </ContentWrapper>
+      
+      <BookmarkButton onClick={handleBookmarkClick}>
+        {restaurant.isBookmarked ? <BsBookmarkFill color="#5186f9" /> : <BsBookmark />}
+      </BookmarkButton>
     </ItemContainer>
   );
 };

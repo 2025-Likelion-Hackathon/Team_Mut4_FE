@@ -1,8 +1,55 @@
 import React from 'react';
-import { ItemContainer, ImagePlaceholder, ContentWrapper, HeaderWrapper, RestaurantName, Checkbox, AddressWrapper, AddressIcon, TagsWrapper, Tag } from '../../restaurant/components/RestaurantItem';
+import axios from 'axios';
+import { useLocationStore } from '../../../stores/uselocationStore';
+import { BsBookmark, BsBookmarkFill } from 'react-icons/bs';
 
-const AccommodationItem = ({ accommodation }) => {
+import {
+  ItemContainer,
+  ImagePlaceholder,
+  ContentWrapper,
+  HeaderWrapper,
+  RestaurantName,
+  BookmarkButton,
+  AddressWrapper,
+  AddressIcon,
+  TagsWrapper,
+  Tag
+} from '../../restaurant/components/RestaurantItem';
+
+const AccommodationItem = ({ accommodation, onBookmarkChange }) => {
   const category = accommodation.categoryName?.split('>')[1]?.trim() || accommodation.categoryName;
+  const { locationId } = useLocationStore();
+
+  const handleBookmarkClick = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (accommodation.isBookmarked) {
+      alert('이미 북마크된 숙소입니다.');
+      return;
+    }
+
+    if (!locationId || !accommodation.id) {
+      alert('필요한 정보가 없습니다.');
+      return;
+    }
+
+    const accommodationId = accommodation.id;
+    const endpoint = `${import.meta.env.VITE_API_BASE_URL}/location-accommodation-bookmarks`;
+    const params = { locationId, accommodationId };
+
+    try {
+      await axios.post(endpoint, null, { params });
+      alert('북마크에 추가되었습니다!');
+
+      if (onBookmarkChange) {
+        onBookmarkChange(accommodationId, true);
+      }
+    } catch (error) {
+      console.error('북마크 추가 실패:', error);
+      alert('북마크 추가에 실패했습니다.');
+    }
+  };
 
   return (
     <ItemContainer to={`/accommodation/${accommodation.id}`}>
@@ -11,7 +58,6 @@ const AccommodationItem = ({ accommodation }) => {
       <ContentWrapper>
         <HeaderWrapper>
           <RestaurantName>{accommodation.name}</RestaurantName>
-          <Checkbox type="checkbox" />
         </HeaderWrapper>
         
         <AddressWrapper>
@@ -33,6 +79,10 @@ const AccommodationItem = ({ accommodation }) => {
           )}
         </TagsWrapper>
       </ContentWrapper>
+      
+      <BookmarkButton onClick={handleBookmarkClick}>
+        {accommodation.isBookmarked ? <BsBookmarkFill color="#5186f9" /> : <BsBookmark />}
+      </BookmarkButton>
     </ItemContainer>
   );
 };

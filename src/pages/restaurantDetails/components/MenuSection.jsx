@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { useRestaurantDetailsStore } from '../../../stores/useRestaurantDetailsStore';
+// import { useRestaurantDetailsStore } from '../../../stores/useRestaurantDetailsStore'; // 실제 데이터 사용 시
 
 const MenuContainer = styled.div`
   padding: 1rem 1.5rem;
@@ -41,8 +41,17 @@ const NoMenuText = styled.p`
   color: #888;
 `;
 
+const mockRestaurant = {
+  menus: [
+    { name: '메뉴A', price: '8,000원' },
+    { name: '메뉴B', price: '8,000원' },
+    { name: '메뉴C', price: '10,000원' },
+    { name: '메뉴D', price: '6,000원' },
+  ],
+};
+
 const MenuSection = () => {
-  const restaurant = useRestaurantDetailsStore((state) => state.restaurant);
+  const restaurant = mockRestaurant;
 
   if (!restaurant || !restaurant.menus || restaurant.menus.length === 0) {
     return (

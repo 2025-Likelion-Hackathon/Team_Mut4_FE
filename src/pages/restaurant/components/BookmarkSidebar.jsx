@@ -17,7 +17,7 @@ const Overlay = styled.div`
 `;
 
 const SidebarContainer = styled.div`
-  position: fixed;
+  position: absolute; /* fixed에서 absolute로 변경 */
   top: 0;
   right: 0;
   width: 80%;

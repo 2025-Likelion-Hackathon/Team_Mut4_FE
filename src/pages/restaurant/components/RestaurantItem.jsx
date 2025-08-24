@@ -2,7 +2,6 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { useLocationStore } from '../../../stores/uselocationStore';
 import { BsBookmark, BsBookmarkFill } from 'react-icons/bs';
 
 export const ItemContainer = styled(Link)`
@@ -75,17 +74,38 @@ export const TagsWrapper = styled.div`
 `;
 
 export const Tag = styled.span`
-  background-color: #f3f4f6;
-  color: #4b5663;
-  font-size: 0.875rem;
+  background-color: ${({ variant }) => {
+    if (variant === 'grade') return '#e0f2fe';
+    if (variant === 'savings') return '#ede9fe';
+    return '#f3f4f6';
+  }};
+  color: ${({ variant }) => {
+    if (variant === 'grade') return '#0284c7';
+    if (variant === 'savings') return '#6d28d9';
+    return '#4b5663';
+  }};
+  font-size: 0.8rem;
   font-weight: 500;
   padding: 0.25rem 0.625rem;
   border-radius: 9999px;
 `;
 
 const RestaurantItem = ({ restaurant, onBookmarkChange }) => {
-  const category = restaurant.categoryName?.split('>')[1]?.trim() || restaurant.categoryName;
-  const { locationId } = useLocationStore();
+  const { 
+    name, placeName, 
+    roadAddress, roadAddressName, 
+    address, addressName, 
+    categoryName, 
+    averageGrade, 
+    restaurantPrice, 
+    regionRestaurantAveragePrice 
+  } = restaurant;
+
+  const category = categoryName?.split('>')[1]?.trim() || categoryName;
+
+  // 절약 가격을 음식점, 숙소 조회 API에서도 넘어줄 수 있는지 물어보기
+  const savings = regionRestaurantAveragePrice - restaurantPrice;
+  const showSavingsTag = savings > 0;
 
   const handleBookmarkClick = async (e) => {
     e.preventDefault();
@@ -132,14 +152,19 @@ const RestaurantItem = ({ restaurant, onBookmarkChange }) => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
           </AddressIcon>
-          <span>{restaurant.roadAddress || restaurant.roadAddressName || restaurant.address || restaurant.addressName}</span>        </AddressWrapper>    
+          <span>{restaurant.roadAddress || restaurant.roadAddressName || restaurant.address || restaurant.addressName}</span>
+        </AddressWrapper>    
+
         <TagsWrapper>
-          {category && <Tag>{category}</Tag>}
-          {restaurant.averageGrad && (
-            <Tag>
-              {restaurant.averageGrad === 'N/A' 
-                ? '인증 대기중' 
-                : `등급: ${restaurant.averageGrad}`}
+          {showSavingsTag && (
+            <Tag variant="savings">
+              {savings.toLocaleString('ko-KR')}원 절약
+            </Tag>
+          )}
+
+          {averageGrade && averageGrade !== 'N/A' && (
+            <Tag variant="grade">
+              인증 등급 {averageGrade}
             </Tag>
           )}
         </TagsWrapper>

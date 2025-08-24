@@ -8,7 +8,7 @@ import { useRestaurantListStore } from '../../../stores/useRestaurantListStore';
 const ListContainer = styled.div`
   padding: 1rem;
   overflow-y: auto;
-  height: calc(100vh - 250px);
+  height: 100vh;
 `;
 const FilterContainer = styled.div`
   display: flex;

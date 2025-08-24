@@ -17,19 +17,6 @@ const InfoTitle = styled.h1`
   font-size: 1.5rem;
   font-weight: bold;
 `;
-const LikeButton = styled.button`
-  background-color: #f0f0f0;
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  font-size: 1.2rem;
-  color: #888;
-`;
 const Category = styled.p`
   color: #888;
   font-size: 0.9rem;
@@ -65,7 +52,6 @@ const InfoSection = () => {
     <InfoContainer>
       <TitleWrapper>
         <InfoTitle>{restaurant.name}</InfoTitle>
-        <LikeButton>🤍</LikeButton>
       </TitleWrapper>
       <Category>{category}</Category>
       <DetailInfo>

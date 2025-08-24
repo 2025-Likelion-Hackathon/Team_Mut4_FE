@@ -7,6 +7,7 @@ import { useLocationStore } from '../../../stores/uselocationStore';
 import { useRestaurantListStore } from '../../../stores/useRestaurantListStore';
 import { useAccommodationListStore } from '../../../stores/useAccommodationListStore';
 import { useMoreTabStore } from '../../../stores/useMoreTabStore';
+import { useUIStore } from '../../../stores/useUIStore';
 
 const HeaderContainer = styled.div`
   padding: 1rem;
@@ -71,8 +72,13 @@ const RestaurantHeader = ({ type }) => {
     setKeyword('');
   }, [activeTab]);
 
+  const { openBookmarkSidebar } = useUIStore();
+
   const handleGoBack = () => navigate(-1);
-  const handleGoToBookmark = () => navigate('/bookmark');
+  
+  const handleOpenBookmarkSidebar = () => {
+    openBookmarkSidebar();
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -99,7 +105,7 @@ const RestaurantHeader = ({ type }) => {
           </SearchIcon>
         </SearchForm>
 
-        <IconButton onClick={handleGoToBookmark}>
+        <IconButton onClick={handleOpenBookmarkSidebar}>
           <FiBookmark />
         </IconButton>
       </HeaderInner>

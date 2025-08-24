@@ -2,7 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { BsBookmark, BsBookmarkFill } from 'react-icons/bs';
+import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai'; 
 import { useLocationStore } from '../../../stores/uselocationStore';
 
 export const ItemContainer = styled(Link)`
@@ -47,7 +47,7 @@ export const BookmarkButton = styled.button`
   border: none;
   cursor: pointer;
   padding: 0.5rem;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   color: #4b5663;
   z-index: 10;
   position: absolute;
@@ -76,13 +76,13 @@ export const TagsWrapper = styled.div`
 
 export const Tag = styled.span`
   background-color: ${({ variant }) => {
-    if (variant === 'grade') return '#e0f2fe';
-    if (variant === 'savings') return '#ede9fe';
+    if (variant === 'grade') return '#d1fae5';
+    if (variant === 'savings') return '#e0f2fe';
     return '#f3f4f6';
   }};
   color: ${({ variant }) => {
-    if (variant === 'grade') return '#0284c7';
-    if (variant === 'savings') return '#6d28d9';
+    if (variant === 'grade') return '#059669';
+    if (variant === 'savings') return '#0284c7';
     return '#4b5663';
   }};
   font-size: 0.8rem;
@@ -106,7 +106,6 @@ const RestaurantItem = ({ restaurant, onBookmarkChange }) => {
 
   const category = categoryName?.split('>')[1]?.trim() || categoryName;
 
-  // 절약 가격을 음식점, 숙소 조회 API에서도 넘어줄 수 있는지 물어보기
   const savings = regionRestaurantAveragePrice - restaurantPrice;
   const showSavingsTag = savings > 0;
 
@@ -174,7 +173,7 @@ const RestaurantItem = ({ restaurant, onBookmarkChange }) => {
       </ContentWrapper>
       
       <BookmarkButton onClick={handleBookmarkClick}>
-        {restaurant.isBookmarked ? <BsBookmarkFill color="#5186f9" /> : <BsBookmark />}
+        {restaurant.isBookmarked ? <AiFillHeart color="#01D281" /> : <AiOutlineHeart />}
       </BookmarkButton>
     </ItemContainer>
   );

@@ -22,7 +22,7 @@ const Container = styled.div`
 `;
 
 const ContentWrapper = styled.div`
-  background-color: #f0f0f0;
+  background-color: transparent;
   border-radius: 8px 8px 0 0;
   overflow: hidden;
 `;

@@ -1,11 +1,11 @@
 import React from 'react';
 import axios from 'axios';
-import { BsBookmark, BsBookmarkFill } from 'react-icons/bs';
+import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { useLocationStore } from '../../../stores/uselocationStore';
 import {
-  ItemContainer, ImagePlaceholder, ContentWrapper, HeaderWrapper, 
-  RestaurantName, BookmarkButton, AddressWrapper, AddressIcon, 
-  TagsWrapper, Tag 
+  ItemContainer, ImagePlaceholder, ContentWrapper, HeaderWrapper,
+  RestaurantName, BookmarkButton, AddressWrapper, AddressIcon,
+  TagsWrapper, Tag
 } from '../../restaurant/components/RestaurantItem';
 
 const AccommodationItem = ({ accommodation, onBookmarkChange }) => {
@@ -14,11 +14,11 @@ const AccommodationItem = ({ accommodation, onBookmarkChange }) => {
     roadAddress, roadAddressName,
     address, addressName,
     categoryName,
-    averageGrade, //API 변수명 수정 됐는지 확인
+    averageGrade, //변수명 수정 됐는지 확인
     accommodationPrice,
     regionAccommodationAveragePrice
   } = accommodation;
-  
+
   const arePricesValid = typeof accommodationPrice === 'number' && typeof regionAccommodationAveragePrice === 'number';
   const savings = arePricesValid ? regionAccommodationAveragePrice - accommodationPrice : 0;
   const showSavingsTag = arePricesValid && savings > 0;
@@ -40,14 +40,11 @@ const AccommodationItem = ({ accommodation, onBookmarkChange }) => {
     const params = { locationId, accommodationId };
 
     try {
-      if (isCurrentlyBookmarked) {
-        await axios.delete(endpoint, { params });
-        alert('북마크가 삭제되었습니다.');
-      } else {
+      if (!isCurrentlyBookmarked) {
         await axios.post(endpoint, null, { params });
         alert('북마크에 추가되었습니다.');
       }
-      
+
       if (onBookmarkChange) {
         onBookmarkChange(accommodationId, !isCurrentlyBookmarked);
       }
@@ -72,7 +69,7 @@ const AccommodationItem = ({ accommodation, onBookmarkChange }) => {
           </AddressIcon>
           <span>{roadAddress || roadAddressName || address || addressName}</span>
         </AddressWrapper>
-        
+
         <TagsWrapper>
           {showSavingsTag && (
             <Tag variant="savings">
@@ -87,9 +84,9 @@ const AccommodationItem = ({ accommodation, onBookmarkChange }) => {
           )}
         </TagsWrapper>
       </ContentWrapper>
-      
+
       <BookmarkButton onClick={handleBookmarkClick}>
-        {accommodation.isBookmarked ? <BsBookmarkFill color="#5186f9" /> : <BsBookmark />}
+        {accommodation.isBookmarked ? <AiFillHeart color="#01D281" /> : <AiOutlineHeart />}
       </BookmarkButton>
     </ItemContainer>
   );

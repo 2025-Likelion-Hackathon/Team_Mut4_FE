@@ -4,16 +4,14 @@ import styled from '@emotion/styled';
 const GradeSliderContainer = styled.div`
   background-color: #fff;
   padding: 1.5rem;
-  border-radius: 12px;
   margin-top: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  text-align: center;
 `;
 
 const SectionTitle = styled.h3`
   font-size: 1.1rem;
   font-weight: bold;
   margin-bottom: 1.5rem;
+  margin-left: -1rem;
 `;
 
 const SliderWrapper = styled.div`
@@ -29,7 +27,7 @@ const SliderTrack = styled.div`
   position: absolute;
   height: 100%;
   left: 0;
-  background-color: #5186f9;
+  background-color: #01D281;
   border-radius: 20px;
   transition: width 0.1s ease-out;
 `;

@@ -1,39 +1,42 @@
 import React from 'react';
 import styled from '@emotion/styled';
-// import { useRestaurantDetailsStore } from '../../../stores/useRestaurantDetailsStore'; // 실제 데이터 사용 시
 
 const MenuContainer = styled.div`
-  padding: 1rem 1.5rem;
-  border-top: 10px solid #f0f0f0;
+  padding: 1.5rem;
+  background-color: #f0f0f0;
 `;
 const SectionTitle = styled.h2`
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: bold;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 `;
 const MenuList = styled.ul`
   list-style: none;
-  background-color: #fff;
   border-radius: 12px;
   padding: 10px 50px;
+  background-color: #f9f9f9;
 `;
 const MenuItem = styled.li`
   display: flex;
   justify-content: space-between;
-  padding: 0.7rem 0;
-  border-bottom: 1px solid #eee;
-  &:last-child {
-    border-bottom: none;
-  }
+  align-items: baseline;
+  padding: 0.8rem 0;
 `;
 const MenuName = styled.span`
   font-size: 1rem;
   color: #333;
+  padding-right: 0.5rem;
+`;
+const DottedLine = styled.div`
+  flex-grow: 1;
+  border-bottom: 2px dotted #ccc;
+  transform: translateY(-4px);
 `;
 const MenuPrice = styled.span`
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: 500;
   color: #333;
+  padding-left: 0.5rem;
 `;
 const NoMenuText = styled.p`
   text-align: center;
@@ -43,10 +46,10 @@ const NoMenuText = styled.p`
 
 const mockRestaurant = {
   menus: [
-    { name: '메뉴A', price: '8,000원' },
-    { name: '메뉴B', price: '8,000원' },
-    { name: '메뉴C', price: '10,000원' },
-    { name: '메뉴D', price: '6,000원' },
+    { name: '메뉴이름 A', price: '10,000 원' },
+    { name: '메뉴이름 B', price: '10,000 원' },
+    { name: '메뉴이름 C', price: '10,000 원' },
+    { name: '메뉴이름 D', price: '10,000 원' },
   ],
 };
 
@@ -69,6 +72,7 @@ const MenuSection = () => {
         {restaurant.menus.map((menu, index) => (
           <MenuItem key={index}>
             <MenuName>{menu.name}</MenuName>
+            <DottedLine />
             <MenuPrice>{menu.price}</MenuPrice>
           </MenuItem>
         ))}

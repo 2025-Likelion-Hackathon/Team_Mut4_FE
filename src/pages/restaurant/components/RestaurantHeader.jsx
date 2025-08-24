@@ -3,15 +3,16 @@ import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import { IoChevronBackOutline } from "react-icons/io5";
 import { FiBookmark } from "react-icons/fi";
-import { useLocationStore } from '../../../stores/uselocationStore'; 
+import { useLocationStore } from '../../../stores/uselocationStore';
 import { useRestaurantListStore } from '../../../stores/useRestaurantListStore';
 import { useAccommodationListStore } from '../../../stores/useAccommodationListStore';
 import { useMoreTabStore } from '../../../stores/useMoreTabStore';
 import { useUIStore } from '../../../stores/useUIStore';
 
 const HeaderContainer = styled.div`
-  padding: 1rem;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 0.5rem 1rem;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
 `;
 
 const HeaderInner = styled.div`
@@ -21,12 +22,14 @@ const HeaderInner = styled.div`
 `;
 
 const IconButton = styled.button`
-  color:rgb(0, 0, 0);
+  color: #495057; /* 아이콘 색상 변경 */
   padding: 0;
   border: none;
   background: none;
   cursor: pointer;
   font-size: 1.5rem;
+  display: flex;
+  align-items: center;
 `;
 
 const SearchForm = styled.form`
@@ -37,13 +40,15 @@ const SearchForm = styled.form`
 
 const SearchInput = styled.input`
   width: 100%;
-  padding: 0.5rem 2.5rem;
-  border: 1px solid #d1d5db;
-  border-radius: 9999px;
+  padding: 0.6rem 2.5rem 0.6rem 1rem;
+  border: 1px solid #ced4da;
+  background-color: #ffffff;
+  border-radius: 8px;
+  font-size: 1rem;
   &:focus {
     outline: none;
-    ring: 2px;
-    ring-color: #3b82f6;
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
   }
 `;
 
@@ -51,10 +56,10 @@ const SearchIcon = styled.svg`
   height: 1.25rem;
   width: 1.25rem;
   position: absolute;
-  left: 0.75rem;
+  right: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
-  color: #9ca3af;
+  color: #6c757d;
 `;
 
 const RestaurantHeader = ({ type }) => {
@@ -104,7 +109,6 @@ const RestaurantHeader = ({ type }) => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </SearchIcon>
         </SearchForm>
-
         <IconButton onClick={handleOpenBookmarkSidebar}>
           <FiBookmark />
         </IconButton>

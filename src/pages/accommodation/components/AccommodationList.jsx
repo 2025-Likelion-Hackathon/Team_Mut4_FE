@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
-import axios from 'axios';
 import AccommodationItem from './AccommodationItem';
 import FilterDropdown from '../../restaurant/components/FilterDropdown';
 import { useLocationStore } from '../../../stores/uselocationStore';
+import { useAccommodationListStore } from '../../../stores/useAccommodationListStore';
 
 const ListContainer = styled.div`
   padding: 1rem;
@@ -25,99 +25,42 @@ const LoadingText = styled.p`
 `;
 
 const AccommodationList = () => {
-  const [accommodations, setAccommodations] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { accommodations, isLoading, error, fetchAccommodations, toggleBookmarkStatus } = useAccommodationListStore();
+  const { locationId } = useLocationStore();
   const [selectedFilter, setSelectedFilter] = useState('거리순');
 
-  const { locationId } = useLocationStore();
-
   useEffect(() => {
-    if (locationId) {
-      const fetchAccommodations = async () => {
-        try {
-          setIsLoading(true);
-          
-          const allAccommodationsEndpoint = `/locations/${locationId}/nearby-accommodation-all`;
-          const bookmarksEndpoint = `/location-accommodation-bookmarks/${locationId}`;
-
-          const allAccommodationsUrl = `${import.meta.env.VITE_API_BASE_URL}${allAccommodationsEndpoint}`;
-          const bookmarksUrl = `${import.meta.env.VITE_API_BASE_URL}${bookmarksEndpoint}`;
-
-          const [allAccommodationsResponse, bookmarksResponse] = await Promise.all([
-            axios.get(allAccommodationsUrl, { params: { radius: 2000 }, timeout: 10000 }),
-            axios.get(bookmarksUrl)
-          ]);
-
-          const allAccommodations = allAccommodationsResponse.data;
-          const bookmarkedAccommodations = bookmarksResponse.data;
-
-          const bookmarkedIdSet = new Set(bookmarkedAccommodations.map(b => b.id));
-
-          const mergedAccommodations = allAccommodations.map(accommodation => ({
-            ...accommodation,
-            isBookmarked: bookmarkedIdSet.has(accommodation.id)
-          }));
-
-          setAccommodations(mergedAccommodations);
-          setError(null);
-          
-        } catch (err) {
-          console.error("Error fetching accommodations:", err);
-          setError("숙소 정보를 불러오는 데 실패했습니다.");
-        } finally {
-          setIsLoading(false);
-        }
-      };
-
-      fetchAccommodations();
-    } else {
-      setIsLoading(false);
-      setAccommodations([]);
-    }
-  }, [locationId, selectedFilter]);
-
-  const handleBookmarkChange = (accommodationId, newBookmarkStatus) => {
-    setAccommodations(currentAccommodations => 
-      currentAccommodations.map(acc => 
-        acc.id === accommodationId ? { ...acc, isBookmarked: newBookmarkStatus } : acc
-      )
-    );
-  };
-
-  if (!locationId) {
-    return <LoadingText>위치 정보를 가져오는 중...</LoadingText>;
-  }
+    fetchAccommodations(locationId);
+  }, [locationId, fetchAccommodations]);
 
   if (isLoading) {
     return <LoadingText>숙소 정보를 불러오는 중...</LoadingText>;
   }
-
   if (error) {
     return <LoadingText>{error}</LoadingText>;
   }
 
   return (
     <div>
-        <FilterContainer>
-            <FilterDropdown 
-              selectedFilter={selectedFilter}
-              onSelectFilter={setSelectedFilter}
+      <FilterContainer>
+        <FilterDropdown 
+          selectedFilter={selectedFilter}
+          onSelectFilter={setSelectedFilter}
+        />
+      </FilterContainer>
+      <ListContainer>
+        {accommodations.length > 0 ? (
+          accommodations.map(accommodation => (
+            <AccommodationItem 
+              key={accommodation.id} 
+              accommodation={accommodation}
+              onBookmarkChange={toggleBookmarkStatus} 
             />
-        </FilterContainer>
-        <ListContainer>
-            {accommodations.length > 0 ? (
-              accommodations.map(accommodation => (
-                <AccommodationItem 
-                  key={accommodation.id} 
-                  accommodation={accommodation}
-                  onBookmarkChange={handleBookmarkChange} 
-                />
-              ))
-            ) : (
-              <LoadingText>주변에 숙소가 없습니다.</LoadingText>
-            )}
-        </ListContainer>
+          ))
+        ) : (
+          <LoadingText>주변에 숙소가 없습니다.</LoadingText>
+        )}
+      </ListContainer>
     </div>
   );
 };

@@ -6,39 +6,48 @@ import { Link } from "react-router-dom";
 
 import { useLocationStore } from "@/stores/uselocationStore";
 import { getCenterByName } from "./lib/kakao";
-import { postWishLocation } from "./api/wishLocation";
+
+import postCurrentLocation from "@/api/CurrentLocation";
+
 
 export default function TravelDestination() {
   const [step, setStep] = useState(1);
   const [sido, setSido] = useState(null);
   const [saving, setSaving] = useState(false);
 
-  const { setAddress, setUserType, setLocationId, setCityName} = useLocationStore();
+  const { setAddress, setUserType, setLocationId, setCityName } =
+      useLocationStore();
 
   async function handleComplete(guName) {
     if (!sido || saving) return;
-    const full = `${sido.label} ${guName}`;
+
+    const full = `${sido.label} ${guName}`; // 예: "부산광역시 서구"
     try {
       setSaving(true);
 
-      const c = await getCenterByName(full); // { lat, lng }
-      const latitude = c.lat;
-      const longitude = c.lng;
+      const { lat, lng } = await getCenterByName(full);
 
-      const res = await postWishLocation({ latitude, longitude });
-      // 응답 안전 파싱 (둘 중 하나여도 동작)
-      const locationId = res?.wishLocationId ?? res?.locationId ?? null;
-      const wishAddress = res?.wishAddress ?? null;
+      const result = await postCurrentLocation(lat, lng);
+
+      if (!result?.success) {
+        throw new Error(result?.error || "postCurrentLocation failed");
+      }
+
+      const data = result.data || {};
+
+      const locationId =
+          data.locationId ?? data.id ?? data?.location?.id ?? null;
 
       if (locationId != null) setLocationId(locationId);
-      setAddress(full);
-      setCityName(full.split(" ")[1]);
+
+      setAddress(full);        // "시 구" 저장 (스토어에서 가공됨)
+      setCityName(sido.label); // 시/광역시만 저장
 
       setStep(3);
     } catch (e) {
       console.error("여행지 저장 실패:", e);
       setAddress(full);
-      setCityName(full.split(" ")[1]);
+      setCityName(sido.label);
       setStep(3);
     } finally {
       setSaving(false);

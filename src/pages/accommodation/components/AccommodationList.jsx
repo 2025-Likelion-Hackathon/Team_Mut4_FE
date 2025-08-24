@@ -9,13 +9,15 @@ const ListContainer = styled.div`
   padding: 1rem;
   overflow-y: auto;
   height: 100vh;
+  padding-top: 0; /* 필터와 목록 사이 간격 조정 */
 `;
 
 const FilterContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   position: relative;
-  z-index: 20; 
+  z-index: 20;
+  padding: 0.5rem 1rem 0; /* 음식점 페이지와 동일하게 패딩 추가 */
 `;
 
 const LoadingText = styled.p`
@@ -43,7 +45,7 @@ const AccommodationList = () => {
   return (
     <div>
       <FilterContainer>
-        <FilterDropdown 
+        <FilterDropdown
           selectedFilter={selectedFilter}
           onSelectFilter={setSelectedFilter}
         />
@@ -51,10 +53,10 @@ const AccommodationList = () => {
       <ListContainer>
         {accommodations.length > 0 ? (
           accommodations.map(accommodation => (
-            <AccommodationItem 
-              key={accommodation.id} 
+            <AccommodationItem
+              key={accommodation.id}
               accommodation={accommodation}
-              onBookmarkChange={toggleBookmarkStatus} 
+              onBookmarkChange={toggleBookmarkStatus}
             />
           ))
         ) : (

@@ -15,6 +15,7 @@ const FilterContainer = styled.div`
   justify-content: flex-end;
   position: relative;
   z-index: 20;
+  padding: 0.5rem 1rem 0;
 `;
 const LoadingText = styled.p`
   text-align: center;

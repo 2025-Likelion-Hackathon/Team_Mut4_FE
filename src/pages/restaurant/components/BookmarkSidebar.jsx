@@ -7,7 +7,7 @@ import { useLocationStore } from '../../../stores/uselocationStore';
 import { IoClose } from "react-icons/io5";
 
 const Overlay = styled.div`
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -17,7 +17,7 @@ const Overlay = styled.div`
 `;
 
 const SidebarContainer = styled.div`
-  position: absolute; /* fixed에서 absolute로 변경 */
+  position: absolute;
   top: 0;
   right: 0;
   width: 80%;

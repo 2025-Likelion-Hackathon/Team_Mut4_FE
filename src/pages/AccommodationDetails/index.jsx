@@ -8,6 +8,7 @@ import LocalReviewSection from '../restaurantDetails/components/LocalReviewSecti
 import ReviewButton from '../restaurantDetails/components/ReviewButton';
 import ReviewsSection from '../restaurantDetails/components/ReviewsSection';
 import { useAccommodationDetailsStore } from '../../stores/useAccommodationDetailsStore';
+import { useLocationStore } from '../../stores/uselocationStore';
 
 const Container = styled.div`
   max-width: 600px;
@@ -28,7 +29,10 @@ const LoadingText = styled.p`
 
 const AccommodationDetailsPage = () => {
   const { id } = useParams();
-  const { accommodation, isLoading, error, fetchAccommodationData, isLocal } = useAccommodationDetailsStore();
+  const { accommodation, isLoading, error, fetchAccommodationData } = useAccommodationDetailsStore();
+  const { userType } = useLocationStore();
+
+  const isUserLocal = userType === 'local';
 
   useEffect(() => {
     if (id) {
@@ -59,7 +63,7 @@ const AccommodationDetailsPage = () => {
         longitude={accommodation.longitude}
       />
       <LocalReviewSection data={accommodation} />
-      <ReviewButton type="accommodation" isLocal={isLocal} />
+      <ReviewButton type="accommodation" isLocal={isUserLocal} />
       <ReviewsSection reviews={accommodation.reviews} />
     </Container>
   );

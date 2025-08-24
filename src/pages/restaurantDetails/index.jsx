@@ -36,7 +36,10 @@ const LoadingText = styled.p`
 const RestaurantDetailPage = () => {
   const { id } = useParams();
   const { restaurant, isLoading, error, fetchRestaurantData } = useRestaurantDetailsStore();
-  const { isLocal } = useLocationStore();
+  const { userType } = useLocationStore();
+  console.log("food", userType);
+
+  const isUserLocal = userType === 'local';
 
   useEffect(() => {
     if (id) {
@@ -64,7 +67,7 @@ const RestaurantDetailPage = () => {
         <MenuSection />
         <LocalReviewSection data={restaurant} />
       </ContentWrapper>
-      <ReviewButton type="restaurant" isLocal={isLocal} />
+      <ReviewButton type="restaurant" isLocal={isUserLocal} />
       <ReviewsSection reviews={restaurant.reviews} />
     </Container>
   );

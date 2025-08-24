@@ -28,7 +28,7 @@ const ReviewButton = ({ type, isLocal }) => {
 
   const handleNavigate = () => {
     if (!isLocal) return;
-    navigate(`/${type}/${id}/write`);
+    navigate(`/${type}/${id}/review`);
   };
 
   return (

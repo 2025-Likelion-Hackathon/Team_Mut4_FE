@@ -39,7 +39,7 @@ const PlaceCard = ({
 
       {/* 콘텐츠 - 배경 위에 표시 */}
       <div className="relative z-10 flex flex-col gap-[20px] pt-[13px] pl-[10px] h-full">
-        <div className="flex flex-col gap-[70px]">
+        <div className="flex flex-col gap-[85px]">
           <div className="flex justify-between pr-2">
             <div className="flex flex-col gap-[5px] w-[120px]">
               <div className="text-[15px] font-bold w-full h-[23px] text-white drop-shadow-md">
@@ -62,11 +62,11 @@ const PlaceCard = ({
               />
             )}
           </div>
-          <div className="flex text-[12px] font-bold gap-[10px]">
-            <div className="w-[50px] h-[21px] rounded-[10px] bg-[#D9D9D9] text-center bg-opacity-90">
+          <div className="flex items-center text-[12px] font-bold gap-[10px]">
+            <div className="w-[50px] h-[21px] rounded-[8px] bg-[#959594] flex justify-center items-center text-white  bg-opacity-70">
               절약
             </div>
-            <div className="text-white drop-shadow-md">
+            <div className="text-black drop-shadow-md">
               {place === "restaurant"
                 ? "5000원"
                 : place === "accommodation"

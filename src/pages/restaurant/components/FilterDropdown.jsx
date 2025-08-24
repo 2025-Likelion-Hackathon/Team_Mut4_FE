@@ -11,15 +11,15 @@ const FilterText = styled.span`
 `;
 
 const DropdownButton = styled.button`
-  background: none;
-  border: none;
+  background-color: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 9999px;
   cursor: pointer;
-  padding: 0.5rem;
+  padding: 0.25rem 0.75rem;
   display: flex;
   align-items: center;
   color: #4b5563;
   font-weight: 500;
-  width: 70px;
 `;
 
 const DropdownMenu = styled.ul`

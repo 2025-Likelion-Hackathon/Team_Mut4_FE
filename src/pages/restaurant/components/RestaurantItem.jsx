@@ -47,7 +47,7 @@ export const BookmarkButton = styled.button`
   border: none;
   cursor: pointer;
   padding: 0.5rem;
-  font-size: 1.5rem; /* 아이콘 크기를 약간 키웠습니다 */
+  font-size: 1.5rem;
   color: #4b5663;
   z-index: 10;
   position: absolute;

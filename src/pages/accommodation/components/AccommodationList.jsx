@@ -9,7 +9,7 @@ const ListContainer = styled.div`
   padding: 1rem;
   overflow-y: auto;
   height: 100vh;
-  padding-top: 0; /* 필터와 목록 사이 간격 조정 */
+  padding-top: 0;
 `;
 
 const FilterContainer = styled.div`
@@ -17,7 +17,7 @@ const FilterContainer = styled.div`
   justify-content: flex-end;
   position: relative;
   z-index: 20;
-  padding: 0.5rem 1rem 0; /* 음식점 페이지와 동일하게 패딩 추가 */
+  padding: 0.5rem 1rem 0;
 `;
 
 const LoadingText = styled.p`

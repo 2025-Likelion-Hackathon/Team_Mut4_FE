@@ -7,58 +7,64 @@ const ReviewContainer = styled.div`
 `;
 
 const SectionTitle = styled.h2`
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: bold;
   margin-bottom: 1rem;
 `;
 
 const SectionBox = styled.div`
-  background-color: #f9f9f9;
+  background-color: #fff;
   padding: 1.2rem;
-  border-radius: 8px;
+  border-radius: 12px;
   margin-bottom: 1rem;
+  border: 1px solid #f0f2f5;
 `;
 
 const GradeTitle = styled.h3`
   font-size: 0.95rem;
-  font-weight: bold;
-  margin-bottom: 0.8rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  
+  strong {
+    color: #10b981;
+    font-size: 1.1rem;
+  }
 `;
 
 const GradeBarWrapper = styled.div`
   display: flex;
   position: relative;
-  height: 25px;
-  background-color: #ddd;
-  border-radius: 12px;
+  height: 8px;
+  background-color: #e9ecef;
+  border-radius: 4px;
   overflow: hidden;
   margin-bottom: 0.5rem;
 `;
 
 const GradeFill = styled.div`
-  background-color: #5186f9;
+  background-color: #34d399;
   height: 100%;
   width: ${(props) => props.width}%;
-  border-radius: 12px;
+  border-radius: 4px;
   transition: width 0.5s ease;
 `;
 
 const GradeLabelWrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 0 10px;
+  padding: 0 5px;
 `;
 
 const GradeLabel = styled.span`
   font-size: 0.8rem;
-  color: #888;
+  color: #adb5bd;
   font-weight: bold;
   text-align: center;
   flex: 1;
 `;
 
 const ReviewItem = styled.div`
-  background-color: #f0f0f0;
+  background-color: #f8f9fa;
   padding: 0.8rem 1rem;
   border-radius: 8px;
   margin-bottom: 0.6rem;
@@ -72,7 +78,6 @@ const ReviewTextWrapper = styled.div`
   align-items: center;
   gap: 0.5rem;
 `;
-
 const ReviewIcon = styled.span`
   font-size: 1.1rem;
 `;
@@ -85,7 +90,7 @@ const ReviewTypeText = styled.span`
 const ReviewCount = styled.span`
   font-size: 0.9rem;
   font-weight: bold;
-  color: #333;
+  color: #34d399;
 `;
 
 const PriceComparisonTitle = styled.h3`
@@ -96,7 +101,7 @@ const PriceComparisonTitle = styled.h3`
   margin-bottom: 1rem;
 
   span {
-    color: #10b981; /* 강조 색상 */
+    color: #10b981;
     font-weight: bold;
   }
 `;
@@ -114,10 +119,10 @@ const PriceBox = styled.div`
   text-align: center;
   font-size: 1rem;
   font-weight: bold;
-  background-color: ${({ isAverage }) => (isAverage ? '#e5e7eb' : '#a7f3d0')};
-  color: ${({ isAverage }) => (isAverage ? '#4b5563' : '#064e3b')};
-  border: 1px solid ${({ isAverage }) => (isAverage ? 'transparent' : '#6ee7b7')};
+  background-color: ${({ isAverage }) => (isAverage ? '#f3f4f6' : '#d1fae5')};
+  color: ${({ isAverage }) => (isAverage ? '#4b5563' : '#065f46')};
 `;
+
 
 const LocalReviewSection = ({ data, type }) => {
   if (!data) return null;
@@ -158,7 +163,7 @@ const LocalReviewSection = ({ data, type }) => {
         ) : (
           <>
             <GradeTitle>
-              현지인 등급 <span style={{ fontWeight: 'bold' }}>{currentGrade}</span>
+              현지인 등급 <strong style={{ fontWeight: 'bold' }}>{currentGrade}</strong>
               {type === 'restaurant' ? ' 가게에요' : ' 숙소에요'}
             </GradeTitle>
             <GradeBarWrapper>

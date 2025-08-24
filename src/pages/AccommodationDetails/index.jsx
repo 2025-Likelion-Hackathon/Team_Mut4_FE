@@ -62,7 +62,7 @@ const AccommodationDetailsPage = () => {
         latitude={accommodation.latitude}
         longitude={accommodation.longitude}
       />
-      <LocalReviewSection data={accommodation} />
+      <LocalReviewSection data={accommodation} type="accommodation" />
       <ReviewButton type="accommodation" isLocal={isUserLocal} />
       <ReviewsSection reviews={accommodation.reviews} />
     </Container>

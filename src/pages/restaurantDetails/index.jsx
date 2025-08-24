@@ -65,7 +65,7 @@ const RestaurantDetailPage = () => {
       <ContentWrapper>
         <InfoSection />
         <MenuSection />
-        <LocalReviewSection data={restaurant} />
+        <LocalReviewSection data={restaurant} type="restaurant" />
       </ContentWrapper>
       <ReviewButton type="restaurant" isLocal={isUserLocal} />
       <ReviewsSection reviews={restaurant.reviews} />

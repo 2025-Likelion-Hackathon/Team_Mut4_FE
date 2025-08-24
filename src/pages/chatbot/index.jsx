@@ -7,7 +7,7 @@ import { ScheduleCards } from "./components/ScheduleCards";
 import InputBar from "./components/InputBar";
 import HistoryDrawer from "./components/HistoryDrawer";
 import { useChatStore } from "../../stores/useChatStore.js";
-import { listSessions, getSessionMessages, sendMessage } from "../../api/ChatBot.js";
+import { listSessions, getSessionMessages, sendMessage, FIXED_SESSION_ID } from "../../api/ChatBot.js";
 
 function fmtTime(ts){ try{ return new Date(ts).toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"}); } catch { return ""; } }
 
@@ -19,35 +19,86 @@ export default function AIChatbotPage(){
 
     React.useEffect(()=>{ (async()=>{
         try {
+            if (sessionId !== FIXED_SESSION_ID) setSessionId(FIXED_SESSION_ID);
+
             const s = await listSessions();
-            const normalized = Array.isArray(s) ? s.map((item)=> (typeof item === 'string' ? {id:item, title:item} : { id: item.id || item, title: item.title || item.id || String(item), updatedAt: item.updatedAt })) : [];
+            const normalized = Array.isArray(s)
+                ? s.map((item)=> (typeof item === 'string'
+                    ? {id:item, title:item}
+                    : { id: item.id || item, title: item.title || item.id || String(item), updatedAt: item.updatedAt }))
+                : [];
             setSessions(normalized);
-            if (sessionId){ const ms = await getSessionMessages(sessionId); setMessages(ms||[]); }
+
+            const ms = await getSessionMessages(FIXED_SESSION_ID);
+            setMessages(ms||[]);
         } catch(e){ console.error(e); }
     })(); }, []); // eslint-disable-line
 
-    const openDrawer = async ()=>{ setDrawerOpen(true); try{ const s = await listSessions(); const normalized = Array.isArray(s)? s.map((item)=> (typeof item==='string'? {id:item,title:item}:{id:item.id||item,title:item.title||item.id||String(item),updatedAt:item.updatedAt})) : []; setSessions(normalized);}catch(e){console.error(e);} };
+    const openDrawer = async ()=>{
+        setDrawerOpen(true);
+        try{
+            const s = await listSessions();
+            const normalized = Array.isArray(s)
+                ? s.map((item)=> (typeof item==='string'
+                    ? {id:item,title:item}
+                    : {id:item.id||item,title:item.title||item.id||String(item),updatedAt:item.updatedAt}))
+                : [];
+            setSessions(normalized);
+        }catch(e){console.error(e);}
+    };
 
-    const pickSession = async (s)=>{ const id = s?.id || s; if(!id) return; setSessionId(id); try{ const ms = await getSessionMessages(id); setMessages(ms||[]);}catch(e){console.error(e);} };
+    // 히스토리에서 선택해도 실제 동작은 고정 세션을 사용
+    const pickSession = async ()=>{
+        setSessionId(FIXED_SESSION_ID);
+        try{
+            const ms = await getSessionMessages(FIXED_SESSION_ID);
+            setMessages(ms||[]);
+        }catch(e){console.error(e);}
+    };
 
     const onSend = async (value)=>{
         const content = (value ?? text).trim(); if(!content || isSending) return;
-        const userMsg = { role:'user', content, createdAt: Date.now() }; addMessage(userMsg); setText(""); setSending(true);
+
+        // UI에 사용자 메시지 먼저
+        addMessage({ role:'user', content, createdAt: Date.now() });
+        setText("");
+        setSending(true);
+
         try {
-            const res = await sendMessage({ sessionId: sessionId || undefined, message: { role:'user', content } });
-            if (res?.sessionId && res.sessionId !== sessionId) setSessionId(res.sessionId);
-            if (res?.message) addMessage({ role: res.message.role || 'assistant', content: res.message.content, createdAt: Date.now() });
-        } catch(e){ console.error(e); addMessage({ role:'assistant', content:'죄송해요. 네트워크 오류가 발생했어요.', createdAt: Date.now() }); }
-        finally { setSending(false); }
+            const res = await sendMessage({ content }); // ✅ 내부에서 고정 sessionId로 전송
+            if (sessionId !== FIXED_SESSION_ID) setSessionId(FIXED_SESSION_ID);
+
+            if (res?.message) {
+                addMessage({
+                    role: res.message.role || 'assistant',
+                    content: res.message.content,
+                    createdAt: Date.now()
+                });
+            }
+        } catch(e){
+            console.error(e);
+            addMessage({
+                role:'assistant',
+                content:'죄송해요. 네트워크 오류가 발생했어요.',
+                createdAt: Date.now()
+            });
+        } finally {
+            setSending(false);
+        }
     };
 
     const onPickQuick = (label)=>{ setText(label); onSend(label); };
 
-    React.useEffect(()=>{ if(!listRef.current) return; listRef.current.scrollTo({ top: listRef.current.scrollHeight, behavior:'smooth' }); }, [messages, isSending]);
+    React.useEffect(()=>{
+        if(!listRef.current) return;
+        listRef.current.scrollTo({ top: listRef.current.scrollHeight, behavior:'smooth' });
+    }, [messages, isSending]);
 
     const renderMessage = (m, i)=>{
         const time = fmtTime(m.createdAt);
-        if (m.role === 'user') return <UserBubble key={i} time={time}>{typeof m.content === 'string' ? m.content : JSON.stringify(m.content)}</UserBubble>;
+        if (m.role === 'user')
+            return <UserBubble key={i} time={time}>{typeof m.content === 'string' ? m.content : JSON.stringify(m.content)}</UserBubble>;
+
         const structured = Array.isArray(m.content);
         return (
             <BotBubble key={i} time={time} after={structured ? <ScheduleCards content={m.content}/> : null}>
@@ -73,8 +124,20 @@ export default function AIChatbotPage(){
                     <QuickReplies items={["메뉴 추천해줘","가격대는?","예약 필요해?","대중교통으로 가는 법"]} onPick={onPickQuick} />
                 </div>
             </main>
-            <InputBar value={text} onChange={setText} onSend={()=>onSend()} disabled={!text.trim()||isSending} />
-            <HistoryDrawer open={drawerOpen} onClose={()=>setDrawerOpen(false)} sessions={sessions} onSelect={pickSession} />
+
+            <InputBar
+                value={text}
+                onChange={setText}
+                onSend={()=>onSend()}
+                disabled={!text.trim()||isSending}
+            />
+
+            <HistoryDrawer
+                open={drawerOpen}
+                onClose={()=>setDrawerOpen(false)}
+                sessions={sessions}
+                onSelect={pickSession} // 선택해도 내부적으로 고정 세션으로 로드
+            />
         </div>
     );
 }

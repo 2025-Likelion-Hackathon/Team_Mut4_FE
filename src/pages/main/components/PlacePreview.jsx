@@ -9,10 +9,17 @@ import { useLocationStore } from "../../../stores/uselocationStore";
 // content는 PlaceCard 컴포넌트에 전달될 props의 배열입니다.
 // 각 PlaceCard는 location, name, price 등의 정보를 표시합니다.
 
-const PlacePreview = ({ title, link, content, type = "preview", onBookmark }) => {
+const PlacePreview = ({
+  title,
+  link,
+  content,
+  place,
+  type = "preview",
+  onBookmark,
+}) => {
   const { cityName } = useLocationStore();
   const cards = content.map((item, index) => () => (
-    <PlaceCard key={index} {...item} onBookmark={onBookmark} />
+    <PlaceCard key={index} {...item} onBookmark={onBookmark} place={place} />
   ));
 
   return (

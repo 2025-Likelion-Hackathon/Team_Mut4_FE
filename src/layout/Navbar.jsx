@@ -8,7 +8,13 @@ const Navbar = () => {
   const location = useLocation();
 
   // 현재 경로가 해당 메뉴와 일치하는지 확인하는 함수
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path) => {
+    if (path === "/restaurant") {
+      // /restaurant로 시작하는 모든 경로를 활성화
+      return location.pathname.startsWith("/restaurant");
+    }
+    return location.pathname === path;
+  };
 
   // 활성/비활성 상태에 따른 색상 클래스 반환
   const getTextColor = (path) =>

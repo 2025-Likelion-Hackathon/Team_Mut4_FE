@@ -49,7 +49,7 @@ const CardSlice = ({ cards, type = "chat" }) => {
       <div className="w-1/2 px-[9px] mt-4 mx-auto">
         <div className="w-full h-1 bg-gray-200 rounded-full overflow-hidden">
           <div
-            className="h-full bg-gray-600 rounded-full transition-all duration-300 ease-out"
+            className="h-full bg-[#01D281] rounded-full transition-all duration-300 ease-out"
             style={{ width: `${progress * 100}%` }}
           />
         </div>

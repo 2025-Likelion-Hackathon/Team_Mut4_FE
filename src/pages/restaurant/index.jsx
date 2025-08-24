@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
-import { Global } from '@emotion/react';
-import RestaurantList from './components/RestaurantList';
-import AccommodationList from '../accommodation/components/AccommodationList';
-import RestaurantHeader from './components/RestaurantHeader';
-import RestaurantNavigation from './components/RestaurantNavigation';
-import { useMoreTabStore } from '../../stores/useMoreTabStore'
-import { useLocation } from 'react-router-dom';
+import React, { useEffect } from "react";
+import { Global } from "@emotion/react";
+import RestaurantList from "./components/RestaurantList";
+import AccommodationList from "../accommodation/components/AccommodationList";
+import RestaurantHeader from "./components/RestaurantHeader";
+import RestaurantNavigation from "./components/RestaurantNavigation";
+import { useMoreTabStore } from "../../stores/useMoreTabStore";
+import { useLocation } from "react-router-dom";
 
 const globalStyles = `
   body {
@@ -22,19 +22,19 @@ function RestaurantPage() {
   const location = useLocation();
 
   useEffect(() => {
-      if (location.pathname === '/accommodation') {
-        setActiveTab('accommodation');
-      } else {
-        setActiveTab('restaurant');
-      }
-    }, [location.pathname, setActiveTab]);
+    if (location.pathname === "/accommodation") {
+      setActiveTab("accommodation");
+    } else {
+      setActiveTab("restaurant");
+    }
+  }, [location.pathname, setActiveTab]);
 
   return (
     <>
       <Global styles={globalStyles} />
       <RestaurantHeader />
       <RestaurantNavigation />
-      {activeTab === 'restaurant' ? <RestaurantList /> : <AccommodationList />}
+      {activeTab === "restaurant" ? <RestaurantList /> : <AccommodationList />}
     </>
   );
 }

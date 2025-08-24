@@ -11,6 +11,9 @@ import { useLocationStore } from "../../stores/uselocationStore";
 
 function MainPage() {
   const { userType, locationId, address, setCityName } = useLocationStore();
+  console.log("userType:", userType);
+  console.log("locationId:", locationId);
+  console.log("address:", address);
   return (
     <div className="flex flex-col h-full bg-white">
       <Chat /> {/* Ai 챗봇 대화 기록 연동 필요 */}

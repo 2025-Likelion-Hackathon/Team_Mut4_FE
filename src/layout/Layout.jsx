@@ -22,11 +22,11 @@ function Layout() {
         <Outlet />
       </div>
       <div className="w-full h-[64px]">
-        {path === "/main" ||
-        path === "/restaurant" ||
-        path === "/accommodation" ? (
+        {path === "/destination" ||
+        path === "/chatbot" ||
+        path === "/accommodation" ? null : (
           <Navbar />
-        ) : null}
+        )}
       </div>
     </div>
   );

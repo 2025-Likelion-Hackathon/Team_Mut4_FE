@@ -15,10 +15,11 @@ const AIChatbotPage = lazy(() => import("../pages/chatbot"));
 const AIChatbotHistoryPage = lazy(
   () => import("../pages/chatbot/chatHistory.jsx")
 );
-const RestaurantPage = lazy(() => import("../pages/restaurant"));
+// const RestaurantPage = lazy(() => import("../pages/restaurant"));
+const ListPage = lazy(() => import("../pages/list/ListPage.jsx"));
 const RestaurantDetailsPage = lazy(() => import("../pages/restaurantDetails"));
 const ReviewWritePage = lazy(() => import("../pages/restaurantDetails/ReviewWritePage"));
-const AccommodationPage = lazy(() => import("../pages/accommodation"));
+// const AccommodationPage = lazy(() => import("../pages/accommodation"));
 const AccommodationDetailsPage = lazy(() => import("../pages/AccommodationDetails"))
 
 const router = createBrowserRouter([
@@ -75,7 +76,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/restaurant",
-        element: <RestaurantPage />,
+        element: <ListPage />,
       },
       {
         path: "/restaurant/:id",
@@ -87,7 +88,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/accommodation",
-        element: <AccommodationPage />,
+        element: <ListPage />,
       },
       {
         path: "/accommodation/:id",

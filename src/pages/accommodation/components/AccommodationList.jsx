@@ -8,7 +8,7 @@ import { useAccommodationListStore } from '../../../stores/useAccommodationListS
 const ListContainer = styled.div`
   padding: 1rem;
   overflow-y: auto;
-  height: calc(100vh - 250px);
+  height: 100vh;
 `;
 
 const FilterContainer = styled.div`

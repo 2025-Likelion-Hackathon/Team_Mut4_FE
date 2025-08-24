@@ -5,6 +5,7 @@ import AccommodationList from '../accommodation/components/AccommodationList';
 import RestaurantHeader from '../restaurant/components/RestaurantHeader';
 import RestaurantNavigation from '../restaurant/components/RestaurantNavigation';
 import { useMoreTabStore } from '../../stores/useMoreTabStore';
+import BookmarkSidebar from '../restaurant/components/BookmarkSidebar';
 
 const globalStyles = `
   body {
@@ -24,6 +25,7 @@ function ListPage() {
       <RestaurantHeader type={activeTab} />
       <RestaurantNavigation />
       {activeTab === 'restaurant' ? <RestaurantList /> : <AccommodationList />}
+      <BookmarkSidebar />
     </>
   );
 }

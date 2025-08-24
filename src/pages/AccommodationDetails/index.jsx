@@ -18,7 +18,7 @@ const Container = styled.div`
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   overflow-x: hidden;
   overflow-y: auto; 
-  height: calc(100vh - 200px);
+  height: 100vh;
 `;
 
 const LoadingText = styled.p`

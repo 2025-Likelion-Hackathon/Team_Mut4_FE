@@ -12,6 +12,7 @@ const NavContainer = styled.div`
 const NavButton = styled.button`
   flex: 1;
   padding: 1rem;
+  border-radius: 0;
   border-bottom: ${props => props.active ? '3px solid #34d399' : 'none'};
   font-weight: ${props => props.active ? '600' : 'normal'};
   color: ${props => props.active ? '#34d399' : '#6b7280'};

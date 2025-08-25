@@ -22,7 +22,7 @@ const HeaderInner = styled.div`
 `;
 
 const IconButton = styled.button`
-  color: #495057; /* 아이콘 색상 변경 */
+  color: #495057;
   padding: 0;
   border: none;
   background: none;

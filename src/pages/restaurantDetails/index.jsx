@@ -61,7 +61,7 @@ const RestaurantDetailPage = () => {
 
   return (
     <Container>
-      <RestaurantDetailsHeader title={restaurant.name} />
+      <RestaurantDetailsHeader title={restaurant.name} type="restaurant" />
       <ContentWrapper>
         <InfoSection />
         <MenuSection />

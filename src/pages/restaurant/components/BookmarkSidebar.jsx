@@ -69,6 +69,7 @@ const SectionHeader = styled.h3`
   padding: 0 1rem;
 `;
 
+const BookmarkItem = styled.li``;
 
 const StyledLink = styled(Link)`
   display: block;

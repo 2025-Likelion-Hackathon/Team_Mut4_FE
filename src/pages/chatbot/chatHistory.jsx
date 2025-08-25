@@ -1,9 +1,12 @@
+// src/pages/chatbot/chatHistory.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { listSessions, getSessionMessages } from "../../api/ChatBot";
 
 import { ScheduleCards } from "./components/ScheduleCards";
 import { BotBubble, UserBubble } from "./components/MessageBubble";
+
+/* -------------------------------- UI -------------------------------- */
 
 function TitleBar({ title, onBack, showBack }) {
     return (
@@ -37,6 +40,47 @@ const fmtTime = (ts) => {
     catch { return ""; }
 };
 
+/* --------------------------- helpers (공통화) --------------------------- */
+
+// 어떤 형태가 와도 배열 [{id,title,updatedAt}] 로 변환
+const ensureArray = (xs) => {
+    if (Array.isArray(xs)) return xs;
+    if (!xs) return [];
+    if (typeof xs === "string") return [{ id: xs, title: xs }];
+    if (typeof xs === "object") {
+        return Object.entries(xs).map(([id, title]) => ({
+            id,
+            title: String(title || id),
+        }));
+    }
+    return [];
+};
+
+// 제목이 비었거나 id와 같은 항목의 title을 첫 사용자 메시지로 채움
+async function hydrateTitlesWithFirstUserMessage(items, limit = 30) {
+    const need = items.filter((it) => !it.title || it.title === it.id).slice(0, limit);
+    if (need.length === 0) return items;
+
+    const settled = await Promise.allSettled(
+        need.map(async (it) => {
+            const ms = await getSessionMessages(it.id);
+            const firstUser =
+                Array.isArray(ms) && ms.find((m) => m?.role === "user" && typeof m.content === "string");
+            const title = firstUser?.content?.trim();
+            return { id: it.id, title: title && title.length ? title : it.title || it.id };
+        })
+    );
+
+    const titleMap = new Map();
+    settled.forEach((r) => {
+        if (r.status === "fulfilled") titleMap.set(r.value.id, r.value.title);
+    });
+
+    return items.map((it) => (titleMap.has(it.id) ? { ...it, title: titleMap.get(it.id) } : it));
+}
+
+/* ----------------------------- Page ----------------------------- */
+
 export default function ChatHistoryPage() {
     const navigate = useNavigate();
 
@@ -53,23 +97,26 @@ export default function ChatHistoryPage() {
     const [loadingMsg, setLoadingMsg] = React.useState(false);
     const [errMsg, setErrMsg] = React.useState("");
 
+    // 최초 목록 로드 (HistoryDrawer와 동일한 정규화/제목 보강)
     React.useEffect(() => {
         let ignore = false;
         (async () => {
             try {
-                const s = await listSessions();
-                const normalized = Array.isArray(s)
-                    ? s.map((item) =>
-                        typeof item === "string"
-                            ? { id: item, title: item }
-                            : {
-                                id: item.id || item,
-                                title: item.title || item.id || String(item),
-                                updatedAt: item.updatedAt,
-                            }
-                    )
-                    : [];
-                if (!ignore) setSessions(normalized);
+                const raw = await listSessions();
+                // 1) 타입 안전 정규화
+                let items = ensureArray(raw).map((item) =>
+                    typeof item === "string"
+                        ? { id: item, title: item }
+                        : {
+                            id: item.id ?? item,
+                            title: item.title ?? (typeof item === "string" ? item : ""),
+                            updatedAt: item.updatedAt,
+                        }
+                );
+                // 2) 제목 비어있으면 첫 사용자 메시지로 보강
+                items = await hydrateTitlesWithFirstUserMessage(items);
+
+                if (!ignore) setSessions(items);
             } catch (e) {
                 if (!ignore) setErrList(e?.message || "목록을 불러오지 못했습니다.");
             } finally {
@@ -84,7 +131,7 @@ export default function ChatHistoryPage() {
         const title = s.title || id;
         setCurrent({ id, title });
         setView("detail");
-        // 메시지 로드
+
         setLoadingMsg(true);
         setErrMsg("");
         try {
@@ -162,7 +209,9 @@ export default function ChatHistoryPage() {
                         onClick={() => openSession(s)}
                         className="w-full text-left p-4 rounded-xl border hover:bg-gray-50"
                     >
-                        <div className="text-sm font-medium truncate">{s.title || s.id || String(s)}</div>
+                        <div className="text-sm font-medium truncate">
+                            {s.title || s.id || String(s)}
+                        </div>
                         <div className="text-xs text-gray-500 mt-0.5">
                             {s.updatedAt ? new Date(s.updatedAt).toLocaleString() : ""}
                         </div>

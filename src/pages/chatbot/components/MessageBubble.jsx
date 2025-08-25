@@ -8,7 +8,7 @@ export function BotBubble({ children, after }) {
         <div className="flex justify-start">
             <div className="max-w-[80%]">
                 <div>
-                    {children}
+                    {children.content}
                 </div>
                 {after}
             </div>

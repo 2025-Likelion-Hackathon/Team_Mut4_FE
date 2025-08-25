@@ -10,7 +10,7 @@ export default function InputBar({ value, onChange, onSend, disabled }) {
             style={{ bottom: `calc(${NAV_HEIGHT_PX}px + env(safe-area-inset-bottom, 0px))` }}
         >
             <div className="px-3 py-2">
-                <form className="flex items-end gap-2" onSubmit={(e) => { e.preventDefault(); onSend?.(); }}>
+                <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); onSend?.(); }}>
                     <div className="flex-1">
                         <label htmlFor="chatInput" className="sr-only">메시지 입력</label>
                         <textarea
@@ -29,7 +29,7 @@ export default function InputBar({ value, onChange, onSend, disabled }) {
                         className={`px-4 py-2 rounded-xl ${
                             disabled
                                 ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                                : 'bg-emerald-600 text-white hover:bg-emerald-700 active:scale-95'
+                                : 'bg-[#0DA872] text-white hover:bg-[#0DA872] active:scale-95'
                         }`}
                     >
                         전송

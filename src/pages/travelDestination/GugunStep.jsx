@@ -23,7 +23,6 @@ export default function GugunStep({ sido, onBack, onComplete, saving }) {
                 <h2 className="font-bold text-lg">
                     2. <span className="text-[#01D281]">지역을 선택</span>해주세요
                 </h2>
-                <p className="text-gray-500 text-sm">여러지역 선택이 가능해요</p>
             </div>
 
             {/* 지도 */}
@@ -32,7 +31,7 @@ export default function GugunStep({ sido, onBack, onComplete, saving }) {
             </div>
 
             {/* 브레드크럼: "<시/도 라벨> > 시/군/구 선택" */}
-            <p className="text-center text-gray-500 text-sm mt-3">
+            <p className="text-left text-gray-500 text-sm mt-3">
                 {sido.label} <span className="mx-1">{">"}</span> 시/군/구 선택
             </p>
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { TopBar } from "./components/TopBar";
-import { BotBubble, UserBubble } from "./components/MessageBubble";
+import {BotBubble, MessageTime, UserBubble} from "./components/MessageBubble";
 import TypingIndicator from "./components/TypingIndicator";
 import { ScheduleCards } from "./components/ScheduleCards";
 import InputBar from "./components/InputBar";
@@ -39,6 +39,14 @@ function IntroCard() {
                 <li>여행 일수</li>
                 <li>선호하는 음식 종류</li>
             </ol>
+            <div className="flex justify-end">
+                <div className="max-w-[80%] text-right">
+                    {/* ✅ 흰색 말풍선 + 테두리 */}
+                    <div className="inline-block rounded-2xl rounded-tr-md bg-white text-gray-900 px-4 py-2 border border-gray-200 shadow-sm whitespace-pre-wrap break-words">
+                        '제주 3일 한식' 처럼 입력하세요
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

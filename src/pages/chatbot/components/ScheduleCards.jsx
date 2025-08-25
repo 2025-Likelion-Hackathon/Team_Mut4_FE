@@ -19,7 +19,7 @@ export function ScheduleCards({ content }) {
                     {content.map((d, idx) => (
                         <div
                             key={idx}
-                            className="min-w-[320px] shrink-0 rounded-2xl border border-gray-200 bg-white p-3 shadow-sm"
+                            className="min-w-[250px] shrink-0 rounded-2xl border border-gray-200 bg-white p-3 shadow-sm"
                         >
                             {/* 상단 타이틀 라인 */}
                             <div className="mb-3 flex items-center gap-2">
@@ -51,9 +51,10 @@ export function ScheduleCards({ content }) {
             </div>
 
             {/* 지도 CTA (말풍선 아래 바로 표시) */}
-            <div className="rounded-2xl border border-[#01D281]/25 bg-white px-4 py-3">
+            <div className="rounded-2xl border  bg-white px-4 py-3">
                 <div className="text-sm">
-                    토박이가 이동 경로와 일정을 정리했어요. 지금 확인해 볼까요?
+                    토박이가 이동 경로와 일정을 정리했어요.<br/>
+                    지금 확인해 볼까요?
                 </div>
                 <div className="mt-3">
                     <button

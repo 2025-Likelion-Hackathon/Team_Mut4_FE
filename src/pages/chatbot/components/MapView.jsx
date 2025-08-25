@@ -1,11 +1,12 @@
+// src/pages/chatbot/components/MapView.jsx
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { loadKakaoSDK, getCenterByName } from "../../travelDestination/lib/kakao";
 
-/** 숫자 캐스팅 */
+/* ---------- utils ---------- */
 const toNum = (v) => (typeof v === "number" ? v : Number(v));
 
-/** 스케줄 아이템 → {lat,lng,title,raw} (좌표 없으면 지오코딩) */
+/** 스케줄 아이템 -> {lat,lng,title,raw} (좌표 없으면 지오코딩) */
 async function normalizePointsForDay(day) {
     const tasks = (day?.schedule || []).map(async (s) => {
         let lat = toNum(s.latitude);
@@ -19,24 +20,18 @@ async function normalizePointsForDay(day) {
                     lat = c.lat;
                     lng = c.lng;
                 } catch {
-                    /* ignore */
+                    /* ignore geocoding error */
                 }
             }
         }
-
-        return {
-            lat,
-            lng,
-            title: s.name || "",
-            raw: s,
-        };
+        return { lat, lng, title: s.name || "", raw: s };
     });
 
     const pts = await Promise.all(tasks);
     return pts.filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lng));
 }
 
-/** 하단 상세 시트 */
+/* ---------- 상세 시트(설명) ---------- */
 function DetailSheet({ day, onClose }) {
     const [openIdx, setOpenIdx] = React.useState(null);
 
@@ -45,7 +40,9 @@ function DetailSheet({ day, onClose }) {
             <div className="mx-auto w-full max-w-[420px] px-4 pb-[env(safe-area-inset-bottom,0px)]">
                 <div className="rounded-2xl bg-white shadow-2xl border border-gray-200 overflow-hidden">
                     <div className="px-4 py-3 flex items-center justify-between border-b">
-                        <div className="text-sm font-semibold text-gray-900">{day.day}일차</div>
+                        <div className="text-sm font-semibold text-gray-900">
+                            {day.day}일차
+                        </div>
                         <button
                             onClick={onClose}
                             className="px-3 py-1.5 rounded-lg text-sm bg-gray-100 hover:bg-gray-200"
@@ -54,25 +51,32 @@ function DetailSheet({ day, onClose }) {
                         </button>
                     </div>
 
-                    <div className="max-h-[55svh] overflow-y-auto p-3 space-y-3">
+                    <div className="max-h-[72svh] overflow-y-auto p-3 space-y-3">
                         {(day.schedule || []).map((s, i) => {
                             const isOpen = openIdx === i;
                             return (
-                                <div key={i} className="rounded-xl border border-emerald-100 bg-emerald-50/60 p-3">
+                                <div
+                                    key={i}
+                                    className="rounded-xl border border-emerald-100 bg-emerald-50/60 p-3"
+                                >
                                     <div className="flex items-start gap-2">
                                         <div className="shrink-0 w-6 h-6 grid place-items-center rounded-full bg-emerald-100 text-emerald-600 text-xs border border-emerald-200">
                                             {s.order ?? i + 1}
                                         </div>
                                         <div className="flex-1">
                                             <div className="flex items-center justify-between">
-                                                <div className="text-sm font-semibold text-emerald-700">{s.name}</div>
+                                                <div className="text-sm font-semibold text-emerald-700">
+                                                    {s.name}
+                                                </div>
                                                 <button
                                                     onClick={() => setOpenIdx(isOpen ? null : i)}
                                                     className="p-1.5 rounded-md hover:bg-emerald-100"
                                                     aria-label="toggle"
                                                 >
                                                     <svg
-                                                        className={`w-4 h-4 text-emerald-700 transition-transform ${isOpen ? "rotate-180" : ""}`}
+                                                        className={`w-4 h-4 text-emerald-700 transition-transform ${
+                                                            isOpen ? "rotate-180" : ""
+                                                        }`}
                                                         viewBox="0 0 20 20"
                                                         fill="currentColor"
                                                     >
@@ -106,54 +110,12 @@ function DetailSheet({ day, onClose }) {
     );
 }
 
-/** 지도 아래 일차 스텝퍼 */
-function DayStepper({ days, selectedIdx, onPrev, onNext, onOpenDetail }) {
-    if (!days?.length) return null;
-
-    return (
-        <div className="w-full max-w-[420px] mx-auto px-4 mt-3">
-            <div className="rounded-2xl bg-white border border-gray-200 shadow-md">
-                {/* 회색 핸들(탭하면 상세 보기) */}
-                <button
-                    onClick={onOpenDetail}
-                    className="w-full grid place-items-center pt-3"
-                    aria-label="상세 보기"
-                >
-                    <span className="block w-24 h-1.5 rounded-full bg-neutral-300" />
-                </button>
-
-                {/* 좌/우 + 일차 */}
-                <div className="px-4 pb-3 mt-2 flex items-center justify-center gap-4">
-                    <button
-                        onClick={onPrev}
-                        disabled={selectedIdx === 0}
-                        className="w-8 h-8 grid place-items-center rounded-full border border-emerald-300 text-emerald-600 disabled:opacity-40"
-                        aria-label="이전 일차"
-                    >
-                        ‹
-                    </button>
-                    <div className="text-base font-semibold text-gray-900">
-                        {days[selectedIdx]?.day}일차
-                    </div>
-                    <button
-                        onClick={onNext}
-                        disabled={selectedIdx === days.length - 1}
-                        className="w-8 h-8 grid place-items-center rounded-full bg-emerald-500 text-white disabled:opacity-40"
-                        aria-label="다음 일차"
-                    >
-                        ›
-                    </button>
-                </div>
-            </div>
-        </div>
-    );
-}
-
+/* ---------- 페이지 ---------- */
 export default function MapView() {
     const nav = useNavigate();
     const location = useLocation();
 
-    /** 채팅에서 전달된 content 보존/복원 */
+    // 채팅에서 온 content 유지/복원
     const initial = React.useMemo(() => {
         const passed = location.state?.content;
         if (Array.isArray(passed)) {
@@ -161,7 +123,9 @@ export default function MapView() {
             return passed;
         }
         try {
-            const saved = JSON.parse(sessionStorage.getItem("chatbot.map.content") || "null");
+            const saved = JSON.parse(
+                sessionStorage.getItem("chatbot.map.content") || "null"
+            );
             return Array.isArray(saved) ? saved : [];
         } catch {
             return [];
@@ -180,15 +144,14 @@ export default function MapView() {
     const days = Array.isArray(content) ? content : [];
     const day = days[selectedIdx];
 
-    /** 지도 초기화 */
+    /* ----- 지도 준비 & 최초 렌더 ----- */
     React.useEffect(() => {
         let canceled = false;
-
         (async () => {
             const kakao = await loadKakaoSDK();
             if (canceled) return;
 
-            // 초기 중심: 대한민국 전체가 한눈에 들어오도록
+            // 초기 중심: 한국 전체 대략
             const center = new kakao.maps.LatLng(36.5, 127.8);
             const map = new kakao.maps.Map(mapRef.current, {
                 center,
@@ -206,13 +169,13 @@ export default function MapView() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    /** 일차 바뀔 때마다 재그리기 */
+    // 일차 바뀌면 재그리기
     React.useEffect(() => {
         drawSelectedDay();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedIdx, content]);
 
-    /** 마커/폴리라인 정리 */
+    /* ----- 지도 유틸 ----- */
     function clearMap() {
         const map = mapObjRef.current;
         if (!map) return;
@@ -224,28 +187,27 @@ export default function MapView() {
         }
     }
 
-    /** 선택 일차 지도 반영 */
     async function drawSelectedDay() {
         const map = mapObjRef.current;
         if (!map || !day) return;
-
         const kakao = window.kakao;
+
         clearMap();
 
         const points = await normalizePointsForDay(day);
         if (points.length === 0) return;
 
-        // 마커 & 경계
+        // 마커 + 경계
         const bounds = new kakao.maps.LatLngBounds();
         points.forEach((p, idx) => {
-            const latlng = new kakao.maps.LatLng(p.lat, p.lng);
-            bounds.extend(latlng);
+            const ll = new kakao.maps.LatLng(p.lat, p.lng);
+            bounds.extend(ll);
 
-            const marker = new kakao.maps.Marker({ position: latlng });
+            const marker = new kakao.maps.Marker({ position: ll });
             marker.setMap(map);
             markersRef.current.push(marker);
 
-            const iw = new kakao.maps.InfoWindow({
+            const info = new kakao.maps.InfoWindow({
                 content: `
           <div style="padding:6px 10px;font-size:12px;">
             <b style="color:#01D281">${idx + 1}. ${p.title || ""}</b><br/>
@@ -253,10 +215,10 @@ export default function MapView() {
           </div>
         `,
             });
-            kakao.maps.event.addListener(marker, "click", () => iw.open(map, marker));
+            kakao.maps.event.addListener(marker, "click", () => info.open(map, marker));
         });
 
-        // 경로 폴리라인
+        // 경로
         const path = points.map((p) => new kakao.maps.LatLng(p.lat, p.lng));
         const polyline = new kakao.maps.Polyline({
             path,
@@ -272,10 +234,15 @@ export default function MapView() {
         map.setBounds(bounds);
     }
 
-    /** 내비게이션 핸들러 */
-    const handlePrev = () => setSelectedIdx((i) => Math.max(0, i - 1));
-    const handleNext = () => setSelectedIdx((i) => Math.min(days.length - 1, i + 1));
+    /* ----- 네비 핸들러 ----- */
+    const prevDay = () => setSelectedIdx((i) => Math.max(0, i - 1));
+    const nextDay = () =>
+        setSelectedIdx((i) => Math.min(days.length - 1, i + 1));
 
+    const currentDayLabel =
+        days[selectedIdx]?.day ?? (Number.isFinite(selectedIdx) ? selectedIdx + 1 : 1);
+
+    /* ----- 렌더 ----- */
     return (
         <div className="relative min-h-svh bg-white">
             {/* 헤더 */}
@@ -286,8 +253,18 @@ export default function MapView() {
                         aria-label="뒤로"
                         onClick={() => nav(-1)}
                     >
-                        <svg className="w-6 h-6 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                        <svg
+                            className="w-6 h-6 text-gray-700"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                        >
+                            <path
+                                strokeWidth="1.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M15.75 19.5 8.25 12l7.5-7.5"
+                            />
                         </svg>
                     </button>
                     <h1 className="absolute left-1/2 -translate-x-1/2 text-sm font-semibold text-gray-900">
@@ -296,27 +273,70 @@ export default function MapView() {
                 </div>
             </header>
 
-            {/* 본문 (지도 + 스텝퍼) */}
-            <main className="max-w-[420px] mx-auto w-full">
-                {/* 지도 */}
+            {/* 지도 */}
+            <div className="relative">
                 <div ref={mapRef} className="w-full h-[min(65svh,520px)] bg-gray-100" />
+                {/* 지도 바로 아래 겹치는 느낌을 주기 위해 살짝 끌어올림 */}
+                <div className="-mt-6" />
+            </div>
 
-                {/* 지도 바로 아래 일차 스텝퍼 */}
-                <DayStepper
-                    days={days}
-                    selectedIdx={selectedIdx}
-                    onPrev={handlePrev}
-                    onNext={handleNext}
-                    onOpenDetail={() => setShowDetail(true)}
-                />
-            </main>
+            {/* Day Stepper (디자인 시안 스타일) */}
+            <div className="w-full max-w-[420px] mx-auto px-4">
+                <div className="pointer-events-auto rounded-2xl bg-white border border-gray-100 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+                    {/* 검은 핸들: 탭하면 상세 */}
+                    <button
+                        onClick={() => setShowDetail(true)}
+                        className="w-full grid place-items-center pt-3"
+                        aria-label="상세 보기"
+                    >
+                        <span className="block w-24 h-[6px] rounded-full bg-neutral-800" />
+                    </button>
+
+                    <div className="px-5 py-3 flex items-center justify-center gap-6">
+                        {/* 이전(연한 초록 테두리의 완전 원형) */}
+                        <button
+                            type="button"
+                            onClick={prevDay}
+                            disabled={selectedIdx === 0}
+                            className={`w-10 h-10 rounded-full grid place-items-center border text-[18px] leading-none transition active:scale-95
+                ${
+                                selectedIdx === 0
+                                    ? "border-emerald-100 text-emerald-200 cursor-not-allowed bg-white"
+                                    : "border-emerald-400 text-emerald-500 hover:bg-emerald-50"
+                            }`}
+                            aria-label="이전 일차"
+                        >
+                            {/* div 문자를 사용해 정확한 원형/정렬 */}
+                            <div className="translate-y-[-1px]">‹</div>
+                        </button>
+
+                        {/* 중앙 레이블 */}
+                        <div className="min-w-[72px] text-center text-[18px] font-extrabold text-gray-900">
+                            {currentDayLabel}일차
+                        </div>
+
+                        {/* 다음(진녹색 가득 찬 완전 원형) */}
+                        <button
+                            type="button"
+                            onClick={nextDay}
+                            disabled={selectedIdx === days.length - 1}
+                            className={`w-10 h-10 rounded-full grid place-items-center text-[18px] leading-none transition active:scale-95
+                ${
+                                selectedIdx === days.length - 1
+                                    ? "bg-emerald-100 text-white cursor-not-allowed"
+                                    : "bg-emerald-500 text-white hover:brightness-95"
+                            }`}
+                            aria-label="다음 일차"
+                        >
+                            <div className="translate-y-[-1px]">›</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
 
             {/* 상세 시트 */}
             {showDetail && day && (
-                <DetailSheet
-                    day={day}
-                    onClose={() => setShowDetail(false)}
-                />
+                <DetailSheet day={day} onClose={() => setShowDetail(false)} />
             )}
         </div>
     );

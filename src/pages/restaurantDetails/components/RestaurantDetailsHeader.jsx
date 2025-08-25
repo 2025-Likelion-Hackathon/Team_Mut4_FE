@@ -5,31 +5,30 @@ import { useNavigate } from 'react-router-dom';
 import restaurantHeaderImage from '../../../assets/Restaurant.png';
 import accommodationHeaderImage from '../../../assets/Accommodation.png';
 
-const HeaderContainer = styled.div`
+const HeaderWrapper = styled.div`
+  position: relative;
+`;
+
+const ImageContainer = styled.div`
   position: relative;
   height: 250px;
-  overflow: hidden;
-  background-size: cover;
-  background-position: center;
   background-color: #d9d9d9;
-
   background-image: url(${(props) =>
     props.type === 'accommodation'
       ? accommodationHeaderImage
       : restaurantHeaderImage});
+  background-size: cover;
+  background-position: center;
 `;
 
 const HeaderTop = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+  position: static;
   height: 60px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   padding: 0 1rem;
-  z-index: 20;
+  background-color: #fff;
+  border-bottom: 1px solid #f0f2f5;
 `;
 
 const BackButton = styled.button`
@@ -38,27 +37,18 @@ const BackButton = styled.button`
   cursor: pointer;
   padding: 0;
   font-size: 1.5rem;
-  color: black;
-`;
-
-const SearchContainer = styled.div`
+  color: #333;
   display: flex;
   align-items: center;
-  flex-grow: 1;
-  background-color: #f0f0f0;
-  border-radius: 20px;
-  padding: 0.5rem 1rem;
-  margin: 0 1rem;
-  border: 1px solid #e0e0e0;
 `;
 
-const BookmarkButton = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  font-size: 1.5rem;
-  color: black;
+const HeaderTitle = styled.h1`
+  flex-grow: 1;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #333;
+  transform: translateX(-1.2rem); 
 `;
 
 const ImageIndicator = styled.div`
@@ -81,17 +71,17 @@ const RestaurantDetailsHeader = ({ title = "상세 정보", type = "restaurant" 
   };
 
   return (
-    <HeaderContainer type={type}>
+    <HeaderWrapper>
       <HeaderTop>
         <BackButton onClick={handleGoBack}>
           <IoChevronBackOutline />
         </BackButton>
-        <SearchContainer>
-          <span style={{ fontWeight: 'bold', flexGrow: 1, textAlign: 'center' }}>{title}</span>
-        </SearchContainer>
+        <HeaderTitle>{title}</HeaderTitle>
       </HeaderTop>
-      <ImageIndicator>1/3</ImageIndicator>
-    </HeaderContainer>
+      <ImageContainer type={type}>
+        <ImageIndicator>1/3</ImageIndicator>
+      </ImageContainer>
+    </HeaderWrapper>
   );
 };
 

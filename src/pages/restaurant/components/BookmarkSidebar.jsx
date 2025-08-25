@@ -69,9 +69,7 @@ const SectionHeader = styled.h3`
   padding: 0 1rem;
 `;
 
-const BookmarkItem = styled.li`
-  /* 스타일 유지를 위해 li 태그는 그대로 둡니다. */
-`;
+const BookmarkItem = styled.li``;
 
 const StyledLink = styled(Link)`
   display: block;
@@ -91,7 +89,6 @@ const NoBookmarksText = styled.p`
   color: #6b7280;
   font-size: 0.9rem;
 `;
-
 
 const BookmarkSidebar = () => {
   const { isBookmarkSidebarOpen, closeBookmarkSidebar } = useUIStore();

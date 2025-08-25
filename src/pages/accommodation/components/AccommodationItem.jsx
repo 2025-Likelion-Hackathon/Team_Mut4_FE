@@ -1,12 +1,27 @@
 import React from 'react';
 import axios from 'axios';
+import styled from '@emotion/styled';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { useLocationStore } from '../../../stores/uselocationStore';
 import {
-  ItemContainer, ImagePlaceholder, ContentWrapper, HeaderWrapper,
+  ItemContainer,
+  ContentWrapper, HeaderWrapper,
   RestaurantName, BookmarkButton, AddressWrapper, AddressIcon,
   TagsWrapper, Tag
 } from '../../restaurant/components/RestaurantItem';
+import accommodationImage from '../../../assets/Accommodation.png';
+
+const ImagePlaceholder = styled.div`
+  width: 6rem;
+  height: 6rem;
+  border-radius: 0.375rem;
+  margin-right: 1rem;
+  flex-shrink: 0;
+  background-image: url(${accommodationImage});
+  background-size: cover;
+  background-position: center;
+`;
+
 
 const AccommodationItem = ({ accommodation, onBookmarkChange }) => {
   const {
@@ -14,14 +29,12 @@ const AccommodationItem = ({ accommodation, onBookmarkChange }) => {
     roadAddress, roadAddressName,
     address, addressName,
     categoryName,
-    averageGrade, //변수명 수정 됐는지 확인
-    accommodationPrice,
-    regionAccommodationAveragePrice
+    averageGrade,
+    priceDifference
   } = accommodation;
 
-  const arePricesValid = typeof accommodationPrice === 'number' && typeof regionAccommodationAveragePrice === 'number';
-  const savings = arePricesValid ? regionAccommodationAveragePrice - accommodationPrice : 0;
-  const showSavingsTag = arePricesValid && savings > 0;
+  const savings = priceDifference;
+  const showSavingsTag = savings != null && savings > 0;
 
   const { locationId } = useLocationStore();
 
@@ -86,7 +99,7 @@ const AccommodationItem = ({ accommodation, onBookmarkChange }) => {
       </ContentWrapper>
 
       <BookmarkButton onClick={handleBookmarkClick}>
-        {accommodation.isBookmarked ? <AiFillHeart color="#01D281" /> : <AiOutlineHeart />}
+        {accommodation.isBookmarked ? <AiFillHeart color="#34d399" /> : <AiOutlineHeart />}
       </BookmarkButton>
     </ItemContainer>
   );

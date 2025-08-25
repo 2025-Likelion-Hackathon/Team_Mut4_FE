@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 
 const ReviewContainer = styled.div`
   padding: 1.5rem;
-  border-top: 10px solid #f0f0f0;
+  background-color: #f0f0f0;
 `;
 
 const SectionTitle = styled.h2`
@@ -133,21 +133,19 @@ const LocalReviewSection = ({ data, type }) => {
   const currentGrade = data.averageGrade;
   const gradeWidth = gradeWidths[currentGrade] || 0;
   const topTags = data.topTags || [];
-
-  const price = data.restaurantPrice || data.accommodationPrice;
-  const regionAveragePrice = data.regionRestaurantAveragePrice || data.regionAccommodationAveragePrice;
-  
+  const price = data.restaurantPrice ?? data.accommodationPrice;
+  const regionAveragePrice = data.foodAveragePrice ?? data.regionAccommodationAveragePrice;
+  const priceDifference = data.priceDifference;
   const showPriceInfo = price != null && regionAveragePrice != null && regionAveragePrice > 0;
 
   let comparisonText = '';
   if (showPriceInfo) {
-    const difference = regionAveragePrice - price;
-    const formattedDiff = Math.abs(difference).toLocaleString('ko-KR');
+    const formattedDiff = Math.abs(priceDifference).toLocaleString('ko-KR');
 
-    if (difference > 0) {
-      comparisonText = <>평균 가격에서 <span>{formattedDiff}원</span> 더 싸요</>;
-    } else if (difference < 0) {
-      comparisonText = <>평균 가격에서 <span>{formattedDiff}원</span> 더 비싸요</>;
+    if (priceDifference > 0) {
+      comparisonText = <>평균 가격보다 <span>{formattedDiff}원</span> 더 싸요</>;
+    } else if (priceDifference < 0) {
+      comparisonText = <>평균 가격보다 <span>{formattedDiff}원</span> 더 비싸요</>;
     } else {
       comparisonText = '지역 평균 가격과 같아요';
     }

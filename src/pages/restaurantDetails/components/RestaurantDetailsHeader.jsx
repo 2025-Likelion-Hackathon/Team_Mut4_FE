@@ -2,12 +2,21 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { IoChevronBackOutline } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
+import restaurantHeaderImage from '../../../assets/Restaurant.png';
+import accommodationHeaderImage from '../../../assets/Accommodation.png';
 
 const HeaderContainer = styled.div`
   position: relative;
-  height: 320px;
-  background-color: #d9d9d9;
+  height: 250px;
   overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  background-color: #d9d9d9;
+
+  background-image: url(${(props) =>
+    props.type === 'accommodation'
+      ? accommodationHeaderImage
+      : restaurantHeaderImage});
 `;
 
 const HeaderTop = styled.div`
@@ -64,7 +73,7 @@ const ImageIndicator = styled.div`
   z-index: 10;
 `;
 
-const RestaurantDetailsHeader = ({ title = "가게 이름" }) => {
+const RestaurantDetailsHeader = ({ title = "상세 정보", type = "restaurant" }) => {
   const navigate = useNavigate();
 
   const handleGoBack = () => {
@@ -72,7 +81,7 @@ const RestaurantDetailsHeader = ({ title = "가게 이름" }) => {
   };
 
   return (
-    <HeaderContainer>
+    <HeaderContainer type={type}>
       <HeaderTop>
         <BackButton onClick={handleGoBack}>
           <IoChevronBackOutline />

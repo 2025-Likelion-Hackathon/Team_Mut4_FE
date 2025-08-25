@@ -6,6 +6,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import GradeSlider from './components/GradeSlider';
 import { useRestaurantDetailsStore } from '../../stores/useRestaurantDetailsStore';
 import { useAccommodationDetailsStore } from '../../stores/useAccommodationDetailsStore';
+import restaurantHeaderImage from '../../assets/Restaurant.png';
+import accommodationHeaderImage from '../../assets/Accommodation.png';
 
 const Container = styled.div`
   max-width: 600px;
@@ -57,10 +59,12 @@ const ImagePlaceholder = styled.div`
   border-radius: 50%;
   margin-right: 1rem;
   flex-shrink: 0;
-  /* 실제 이미지 표시를 위한 스타일  */
-  /* background-image: url('YOUR_IMAGE_URL'); */
-  /* background-size: cover; */
-  /* background-position: center; */
+  background-image: url(${(props) =>
+      props.type === 'accommodation'
+        ? accommodationHeaderImage
+        : restaurantHeaderImage});
+  background-size: cover;
+  background-position: center;
 `;
 
 const InfoText = styled.div`
@@ -260,7 +264,7 @@ const ReviewWritePage = () => {
 
       <PageContent>
         <RestaurantInfo>
-          <ImagePlaceholder />
+          <ImagePlaceholder type={type} />
           <InfoText>
             <RestaurantName>{data.name || '하이엔드 제주'}</RestaurantName>
             <RestaurantDescription>{data.categoryName?.split('>').pop().trim() || '음식점>한식>고깃집'}</RestaurantDescription>

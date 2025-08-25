@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai'; 
 import { useLocationStore } from '../../../stores/uselocationStore';
+import restaurantImage from '../../../assets/Restaurant.png';
 
 export const ItemContainer = styled(Link)`
   display: flex;
@@ -18,10 +19,12 @@ export const ItemContainer = styled(Link)`
 export const ImagePlaceholder = styled.div`
   width: 6rem;
   height: 6rem;
-  background-color: #e5e7eb;
   border-radius: 0.375rem;
   margin-right: 1rem;
   flex-shrink: 0;
+  background-image: url(${restaurantImage});
+  background-size: cover;
+  background-position: center;
 `;
 
 export const ContentWrapper = styled.div`
@@ -100,14 +103,11 @@ const RestaurantItem = ({ restaurant, onBookmarkChange }) => {
     address, addressName, 
     categoryName, 
     averageGrade, 
-    restaurantPrice, 
-    regionRestaurantAveragePrice 
+    priceDifference
   } = restaurant;
 
-  const category = categoryName?.split('>')[1]?.trim() || categoryName;
-
-  const savings = regionRestaurantAveragePrice - restaurantPrice;
-  const showSavingsTag = savings > 0;
+  const savings = priceDifference;
+  const showSavingsTag = savings != null && savings > 0;
 
   const handleBookmarkClick = async (e) => {
     e.preventDefault();
@@ -130,7 +130,7 @@ const RestaurantItem = ({ restaurant, onBookmarkChange }) => {
     try {
       await axios.post(endpoint, null, { params });
       alert('북마크에 추가되었습니다.');
-      
+
       if (onBookmarkChange) {
         onBookmarkChange(foodId, true);
       }
@@ -146,7 +146,7 @@ const RestaurantItem = ({ restaurant, onBookmarkChange }) => {
       
       <ContentWrapper>
         <HeaderWrapper>
-          <RestaurantName>{restaurant.name || restaurant.placeName}</RestaurantName>
+          <RestaurantName>{name || placeName}</RestaurantName>
         </HeaderWrapper>
         
         <AddressWrapper>
@@ -154,7 +154,7 @@ const RestaurantItem = ({ restaurant, onBookmarkChange }) => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
           </AddressIcon>
-          <span>{restaurant.roadAddress || restaurant.roadAddressName || restaurant.address || restaurant.addressName}</span>
+          <span>{roadAddress || roadAddressName || address || addressName}</span>
         </AddressWrapper>    
 
         <TagsWrapper>
@@ -173,7 +173,7 @@ const RestaurantItem = ({ restaurant, onBookmarkChange }) => {
       </ContentWrapper>
       
       <BookmarkButton onClick={handleBookmarkClick}>
-        {restaurant.isBookmarked ? <AiFillHeart color="#01D281" /> : <AiOutlineHeart />}
+        {restaurant.isBookmarked ? <AiFillHeart color="#34d399" /> : <AiOutlineHeart />}
       </BookmarkButton>
     </ItemContainer>
   );

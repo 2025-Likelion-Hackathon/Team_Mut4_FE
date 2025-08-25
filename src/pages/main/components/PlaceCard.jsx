@@ -10,11 +10,11 @@ import Book from "../../../assets/Iconex/Light/Bookmark.svg?react";
 const PlaceCard = ({
   address,
   name,
-  price,
+
+  priceDifference,
   id,
   onBookmark,
   isBookmarked: initialBookmarked = false,
-  place,
 }) => {
   const [isBookmarked, setIsBookmarked] = useState(initialBookmarked);
 
@@ -66,13 +66,11 @@ const PlaceCard = ({
             <div className="w-[50px] h-[21px] rounded-[8px] bg-[#959594] flex justify-center items-center text-white  bg-opacity-70">
               절약
             </div>
-            <div className="text-black drop-shadow-md">
-              {place === "restaurant"
-                ? "5000원"
-                : place === "accommodation"
-                  ? "20000원"
-                  : price}
-            </div>{" "}
+
+            <div className="text-white drop-shadow-md">
+              {Math.abs(priceDifference)}원
+
+            </div>
             {/* 가격 정보 표시 필요 */}
           </div>
         </div>

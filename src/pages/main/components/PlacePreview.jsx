@@ -13,13 +13,12 @@ const PlacePreview = ({
   title,
   link,
   content,
-  place,
   type = "preview",
   onBookmark,
 }) => {
   const { cityName } = useLocationStore();
   const cards = content.map((item, index) => () => (
-    <PlaceCard key={index} {...item} onBookmark={onBookmark} place={place} />
+    <PlaceCard key={index} {...item} onBookmark={onBookmark} />
   ));
 
   return (

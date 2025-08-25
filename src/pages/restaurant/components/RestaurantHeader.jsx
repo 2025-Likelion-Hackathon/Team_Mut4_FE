@@ -87,11 +87,15 @@ const RestaurantHeader = ({ type }) => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    if (!keyword.trim()) {
+    
+    const trimmedKeyword = keyword.trim();
+
+    if (!trimmedKeyword) {
       alert('검색어를 입력해주세요.');
       return;
     }
-    searchAction(locationId, keyword);
+    
+    navigate(`/search?keyword=${trimmedKeyword}`);
   };
 
   return (
@@ -101,7 +105,7 @@ const RestaurantHeader = ({ type }) => {
         <SearchForm onSubmit={handleSearch}>
           <SearchInput 
             type="text" 
-            placeholder={type === 'restaurant' ? '음식점 검색' : '숙소 검색'} 
+            placeholder={'검색어를 입력해주세요.'} 
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
           />

@@ -6,30 +6,11 @@ const ReviewsContainer = styled.div`
   background-color: #f0f0f0;
 `;
 
-const TabBar = styled.div`
-  display: flex;
-  margin-bottom: 1.5rem;
-`;
-
-const Tab = styled.button`
-  background: none;
-  border: none;
+const SortLabel = styled.div`
   font-size: 1rem;
   font-weight: bold;
-  color: ${(props) => (props.active ? '#01D281' : '#a9a9a9')};
-  cursor: pointer;
-  padding: 0.5rem 0;
-  margin-right: 1rem;
-  position: relative;
-  &:after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background-color: ${(props) => (props.active ? '#01D281' : 'transparent')};
-  }
+  color: #333;
+  margin-bottom: 1.5rem;
 `;
 
 const ReviewCard = styled.div`
@@ -86,7 +67,6 @@ const NoReviewText = styled.p`
 `;
 
 const ReviewsSection = ({ reviews = [] }) => {
-  const [activeTab, setActiveTab] = useState('recommended');
   const [expandedReviews, setExpandedReviews] = useState({});
 
   const toggleExpand = (id) => {
@@ -99,10 +79,6 @@ const ReviewsSection = ({ reviews = [] }) => {
   if (reviews.length === 0) {
     return (
         <ReviewsContainer>
-            <TabBar>
-                <Tab active>추천순</Tab>
-                <Tab>최신순</Tab>
-            </TabBar>
             <NoReviewText>작성된 리뷰가 없습니다.</NoReviewText>
         </ReviewsContainer>
     );
@@ -110,14 +86,7 @@ const ReviewsSection = ({ reviews = [] }) => {
 
   return (
     <ReviewsContainer>
-      <TabBar>
-        <Tab active={activeTab === 'recommended'} onClick={() => setActiveTab('recommended')}>
-          추천순
-        </Tab>
-        <Tab active={activeTab === 'latest'} onClick={() => setActiveTab('latest')}>
-          최신순
-        </Tab>
-      </TabBar>
+      <SortLabel>최신순</SortLabel>
 
       {reviews.map((review) => {
         const isExpanded = expandedReviews[review.id];

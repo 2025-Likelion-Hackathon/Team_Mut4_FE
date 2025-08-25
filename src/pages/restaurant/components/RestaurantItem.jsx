@@ -81,11 +81,13 @@ export const Tag = styled.span`
   background-color: ${({ variant }) => {
     if (variant === 'grade') return '#d1fae5';
     if (variant === 'savings') return '#e0f2fe';
+    if (variant === 'loss') return '#fee2e2';
     return '#f3f4f6';
   }};
   color: ${({ variant }) => {
     if (variant === 'grade') return '#059669';
     if (variant === 'savings') return '#0284c7';
+    if (variant === 'loss') return '#b91c1c';
     return '#4b5663';
   }};
   font-size: 0.8rem;
@@ -106,13 +108,13 @@ const RestaurantItem = ({ restaurant, onBookmarkChange }) => {
     priceDifference
   } = restaurant;
 
-  const savings = priceDifference;
-  const showSavingsTag = savings != null && savings > 0;
+  const savingsOrLoss = priceDifference;
+  const showSavingsTag = savingsOrLoss != null && savingsOrLoss > 0;
+  const showLossTag = savingsOrLoss != null && savingsOrLoss < 0;
 
   const handleBookmarkClick = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-
     if (restaurant.isBookmarked) {
       alert('이미 북마크된 항목입니다.');
       return;
@@ -160,7 +162,13 @@ const RestaurantItem = ({ restaurant, onBookmarkChange }) => {
         <TagsWrapper>
           {showSavingsTag && (
             <Tag variant="savings">
-              {savings.toLocaleString('ko-KR')}원 절약
+              {savingsOrLoss.toLocaleString('ko-KR')}원 절약
+            </Tag>
+          )}
+
+          {showLossTag && (
+            <Tag variant="loss">
+              {Math.abs(savingsOrLoss).toLocaleString('ko-KR')}원 손해
             </Tag>
           )}
 

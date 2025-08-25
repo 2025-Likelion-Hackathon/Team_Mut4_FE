@@ -1,7 +1,7 @@
 import React from "react";
 import PlaceCard from "./PlaceCard";
 import CardSlice from "./CardSlice";
-import Go from "../../../assets/Go.svg?react";
+import Go from "../../../assets//Iconex/Filled/Go.svg?react";
 import { Link } from "react-router-dom";
 import { useLocationStore } from "../../../stores/uselocationStore";
 // PlacePreview 컴포넌트는 숙소나 맛집의 미리보기를 표시하는 컴포넌트입니다.
@@ -26,11 +26,11 @@ const PlacePreview = ({
       <div className="flex justify-between items-center pr-[14px]">
         <div className="font-bold text-[18px] gap-[5px] flex items-center">
           {" "}
-          <div>{cityName}</div>
+          {title === "숙소 추천" ? <div>{cityName}</div> : null}
           <div> {title}</div>
         </div>
 
-        <Link to={link} className=" flex gap-[5px] items-center">
+        <Link to={link} className="text-[#6E6E6E] flex gap-[5px] items-center">
           더보기 <Go />
         </Link>
       </div>

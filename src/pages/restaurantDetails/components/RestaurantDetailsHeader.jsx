@@ -7,13 +7,12 @@ import accommodationHeaderImage from '../../../assets/Accommodation.png';
 
 const HeaderContainer = styled.div`
   position: relative;
-  height: 250px; /* 이미지에 맞게 높이 조정 */
+  height: 250px;
   overflow: hidden;
   background-size: cover;
   background-position: center;
   background-color: #d9d9d9;
 
-  /* 2. props로 전달된 type에 따라 다른 배경 이미지를 설정합니다. */
   background-image: url(${(props) =>
     props.type === 'accommodation'
       ? accommodationHeaderImage

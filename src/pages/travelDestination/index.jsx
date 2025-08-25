@@ -1,48 +1,37 @@
-// src/pages/travelDestination/index.jsx
 import { useState } from "react";
 import SidoStep from "./SidoStep";
 import GugunStep from "./GugunStep";
 import { Link } from "react-router-dom";
+import TopHeader from "./components/TopHeader";
 
 import { useLocationStore } from "@/stores/uselocationStore";
 import { getCenterByName } from "./lib/kakao";
-
 import postCurrentLocation from "@/api/CurrentLocation";
-
 
 export default function TravelDestination() {
   const [step, setStep] = useState(1);
-  const [sido, setSido] = useState(null);
+  const [sido, setSido] = useState(null);       // 확정된 시/도
+  const [sidoPick, setSidoPick] = useState(null); // 1단계 선택만
   const [saving, setSaving] = useState(false);
 
-  const { setAddress, setUserType, setLocationId, setCityName } =
-      useLocationStore();
+  const { setAddress, setUserType, setLocationId, setCityName } = useLocationStore();
 
   async function handleComplete(guName) {
     if (!sido || saving) return;
+    const full = `${sido.label} ${guName}`;
 
-    const full = `${sido.label} ${guName}`; // 예: "부산광역시 서구"
     try {
       setSaving(true);
-
       const { lat, lng } = await getCenterByName(full);
-
       const result = await postCurrentLocation(lat, lng);
-
-      if (!result?.success) {
-        throw new Error(result?.error || "postCurrentLocation failed");
-      }
+      if (!result?.success) throw new Error(result?.error || "postCurrentLocation failed");
 
       const data = result.data || {};
-
-      const locationId =
-          data.locationId ?? data.id ?? data?.location?.id ?? null;
-
+      const locationId = data.locationId ?? data.id ?? data?.location?.id ?? null;
       if (locationId != null) setLocationId(locationId);
 
-      setAddress(full);        // "시 구" 저장 (스토어에서 가공됨)
-      setCityName(sido.label); // 시/광역시만 저장
-
+      setAddress(full);
+      setCityName(sido.label);
       setStep(3);
     } catch (e) {
       console.error("여행지 저장 실패:", e);
@@ -55,36 +44,68 @@ export default function TravelDestination() {
   }
 
   return (
-      <div className="p-4 space-y-4">
-        {step === 1 && (
-            <SidoStep
-                onPick={(s) => {
-                  setSido(s);
-                  setStep(2);
-                }}
-            />
-        )}
+      <div className="min-h-[100svh] bg-gray-50">
+        <TopHeader
+            title="여행 지역 선택"
+            onBack={step === 1 ? undefined : () => setStep(step - 1)}
+            step={step}     // ✅ 진행률 표시용
+        />
 
-        {step === 2 && sido && (
-            <GugunStep
-                sido={sido}
-                onBack={() => setStep(1)}
-                onComplete={handleComplete}
-                saving={saving}
-            />
-        )}
+        {/* 중앙 카드형 컨테이너 (모바일 중심) */}
+        <div className="mx-auto max-w-md px-4 pt-4 pb-28">
+          {step === 1 && (
+              <>
+                <SidoStep
+                    value={sidoPick}
+                    onChange={(s) => setSidoPick(s)}
+                />
+                {/* 하단 고정 확인 버튼 */}
+                <div className="fixed inset-x-0 bottom-0 mx-auto max-w-md bg-white/95 backdrop-blur border-t p-3">
+                  <button
+                      disabled={!sidoPick}
+                      onClick={() => {
+                        setSido(sidoPick);
+                        setStep(2);
+                      }}
+                      className="w-full h-12 rounded-xl font-semibold text-white disabled:opacity-40"
+                      style={{ backgroundColor: "#01D281" }}
+                  >
+                    확인
+                  </button>
+                </div>
+              </>
+          )}
 
-        {step === 3 && (
-            <div className="min-h-[100svh] flex flex-col pb-28 px-4">
-              <div className="flex-1 flex flex-col items-center justify-center gap-8">
-                <div className="w-28 h-28 rounded-full bg-gray-200" />
+          {step === 2 && sido && (
+              <>
+                <GugunStep
+                    sido={sido}
+                    onBack={() => setStep(1)}
+                    onComplete={handleComplete}
+                    saving={saving}
+                />
+                {/* 선택 완료 버튼은 GugunStep 내부에서 렌더(하단 고정) */}
+              </>
+          )}
+
+          {step === 3 && (
+              <div className="min-h-[60vh] flex flex-col items-center justify-center gap-8">
+                <div className="w-20 h-20 rounded-full bg-[#C2FFE7] flex items-center justify-center">
+                  <span className="text-[#01D281] text-2xl">✓</span>
+                </div>
                 <h2 className="text-2xl font-semibold">여행 준비 완료!</h2>
               </div>
+          )}
+        </div>
 
+        {/* 완료 화면 하단 고정 버튼 */}
+        {step === 3 && (
+            <div className="fixed inset-x-0 bottom-0 mx-auto max-w-md bg-white/95 backdrop-blur border-t p-3">
               <Link
                   to="/main"
                   onClick={() => setUserType("tourist")}
-                  className="w-full h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center"
+                  className="w-full h-12 rounded-xl font-semibold text-white flex items-center justify-center"
+                  style={{ backgroundColor: "#01D281" }}
               >
                 확인
               </Link>

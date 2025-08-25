@@ -12,19 +12,22 @@ const HeaderWrapper = styled.div`
 const ImageContainer = styled.div`
   position: relative;
   height: 250px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
   background-color: #d9d9d9;
+
   background-image: url(${(props) =>
     props.type === 'accommodation'
       ? accommodationHeaderImage
       : restaurantHeaderImage});
-  background-size: cover;
-  background-position: center;
 `;
 
 const HeaderTop = styled.div`
   position: static;
   height: 60px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   padding: 0 1rem;
   background-color: #fff;
@@ -71,6 +74,7 @@ const RestaurantDetailsHeader = ({ title = "상세 정보", type = "restaurant" 
   };
 
   return (
+
     <HeaderWrapper>
       <HeaderTop>
         <BackButton onClick={handleGoBack}>

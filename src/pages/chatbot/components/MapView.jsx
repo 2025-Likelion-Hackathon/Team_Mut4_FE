@@ -3,6 +3,9 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { loadKakaoSDK, getCenterByName } from "../../travelDestination/lib/kakao";
 
+import pin from '../assets/pin.svg';
+
+
 /* ---------- utils ---------- */
 const toNum = (v) => (typeof v === "number" ? v : Number(v));
 
@@ -31,79 +34,136 @@ async function normalizePointsForDay(day) {
     return pts.filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lng));
 }
 
+/* ---------- 공통: 원형 버튼 ---------- */
+function RoundBtn({ kind = "outline", disabled, onClick, label = "‹" }) {
+    // kind: 'outline' | 'solid'
+    const base =
+        "size-8 aspect-square rounded-full grid place-items-center text-[20px] border shrink-0 p-0";
+    if (kind === "outline") {
+        return (
+            <button
+                type="button"
+                onClick={onClick}
+                disabled={disabled}
+                className={`${base} ${
+                    disabled
+                        ? "border border-[#01D281] text-[#01D281] cursor-not-allowed bg-white"
+                        : "border border-[#01D281] text-[#01D281] hover:bg-emerald-50"
+                }`}
+                aria-label="prev"
+            >
+                <div className="-translate-y-[1px]">{label}</div>
+            </button>
+        );
+    }
+    return (
+        <button
+            type="button"
+            onClick={onClick}
+            disabled={disabled}
+            className={`${base} ${
+                disabled
+                    ? "bg-[#01D281] text-white cursor-not-allowed"
+                    : "bg-[#01D281] text-white hover:brightness-95"
+            }`}
+            aria-label="next"
+        >
+            <div className="-translate-y-[1px]">{label}</div>
+        </button>
+    );
+}
+
 /* ---------- 상세 시트(설명) ---------- */
-function DetailSheet({ day, onClose }) {
+function DetailSheet({
+                         day,
+                         selectedIdx,
+                         daysLen,
+                         onPrev,
+                         onNext,
+                         onClose,
+                     }) {
     const [openIdx, setOpenIdx] = React.useState(null);
 
     return (
         <div className="fixed inset-x-0 bottom-0 z-30">
             <div className="mx-auto w-full max-w-[420px] px-4 pb-[env(safe-area-inset-bottom,0px)]">
-                <div className="rounded-2xl bg-white shadow-2xl border border-gray-200 overflow-hidden">
-                    <div className="px-4 py-3 flex items-center justify-between border-b">
-                        <div className="text-sm font-semibold text-gray-900">
+                <div className="rounded-2xl bg-white shadow-[0_24px_60px_rgba(0,0,0,0.18)] border border-gray-200 overflow-hidden">
+                    {/* 핸들 (탭하면 닫힘) */}
+                    <button
+                        onClick={onClose}
+                        className="w-full grid place-items-center pt-3 pb-1"
+                        aria-label="닫기"
+                    >
+                        <span className="block w-24 h-[6px] rounded-full bg-neutral-800" />
+                    </button>
+
+                    {/* 가운데 스텝퍼 */}
+                    <div className="px-5 pb-2 flex items-center justify-center gap-3">
+                        <RoundBtn kind="outline" label="‹" onClick={onPrev} disabled={selectedIdx===0}/>
+                        <div className="min-w-[72px] text-center text-[18px] font-extrabold text-gray-900">
                             {day.day}일차
                         </div>
-                        <button
-                            onClick={onClose}
-                            className="px-3 py-1.5 rounded-lg text-sm bg-gray-100 hover:bg-gray-200"
-                        >
-                            닫기
-                        </button>
+                        <RoundBtn kind="solid" label="›" onClick={onNext} disabled={selectedIdx===daysLen-1}/>
                     </div>
-
-                    <div className="max-h-[72svh] overflow-y-auto p-3 space-y-3">
+                    {/* 리스트 */}
+                    <div className="max-h-[72svh] overflow-y-auto p-3 space-y-8">
                         {(day.schedule || []).map((s, i) => {
                             const isOpen = openIdx === i;
+                            const isLast = i === (day.schedule?.length ?? 0) - 1;
+
                             return (
-                                <div
-                                    key={i}
-                                    className="rounded-xl border border-emerald-100 bg-emerald-50/60 p-3"
-                                >
-                                    <div className="flex items-start gap-2">
-                                        <div className="shrink-0 w-6 h-6 grid place-items-center rounded-full bg-emerald-100 text-emerald-600 text-xs border border-emerald-200">
-                                            {s.order ?? i + 1}
-                                        </div>
-                                        <div className="flex-1">
-                                            <div className="flex items-center justify-between">
-                                                <div className="text-sm font-semibold text-emerald-700">
+                                <div key={i} className="relative pl-10">
+                                    {/* 왼쪽 핀 */}
+                                    <img
+                                        src={pin}
+                                        alt="핀"
+                                        className="absolute left-0 top-1 w-6 h-6"
+                                    />
+
+                                    {/* 핀 사이 점선(마지막은 숨김) */}
+                                    {!isLast && (
+                                        <div className="pointer-events-none absolute left-[12px] top-8 bottom-[-18px] border-l border-dashed border-gray-200" />
+                                    )}
+
+
+                                    {/* 본문 카드 */}
+                                    <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-[0_1px_0_rgba(0,0,0,0.03)]">
+                                        <div className="flex items-start justify-between gap-3">
+                                            <div>
+                                                <div className="text-[18px] font-semibold leading-6 text-[#01D281]">
                                                     {s.name}
                                                 </div>
-                                                <button
-                                                    onClick={() => setOpenIdx(isOpen ? null : i)}
-                                                    className="p-1.5 rounded-md hover:bg-emerald-100"
-                                                    aria-label="toggle"
-                                                >
-                                                    <svg
-                                                        className={`w-4 h-4 text-emerald-700 transition-transform ${
-                                                            isOpen ? "rotate-180" : ""
-                                                        }`}
-                                                        viewBox="0 0 20 20"
-                                                        fill="currentColor"
-                                                    >
-                                                        <path
-                                                            fillRule="evenodd"
-                                                            d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"
-                                                            clipRule="evenodd"
-                                                        />
-                                                    </svg>
-                                                </button>
                                             </div>
-                                            <div className="text-xs text-gray-500 mt-0.5">
-                                                {s.type}
-                                                {s.type && s.address ? " · " : ""}
-                                                {s.address}
+
+                                            {/* 설명 토글 버튼 (작은 초록 원형) */}
+                                            <button
+                                                onClick={() => setOpenIdx(isOpen ? null : i)}
+                                                className="size-8 aspect-square rounded-full grid bg-[#01D281] text-white place-items-center text-[20px] border shrink-0 p-0"
+                                                aria-label="toggle"
+                                            ><span className={`inline-block transition-transform ${isOpen ? "" : "rotate-180"}`}>^</span>
+                                            </button>
+                                        </div>
+
+                                        {/* 설명 영역 */}
+                                        {isOpen && (
+                                            <div className="mt-3 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-[13px] leading-5 text-gray-700">
+                                                {s.description || "설명이 없어요. 여정을 즐겨보세요!"}
                                             </div>
-                                            {isOpen && s.description && (
-                                                <div className="mt-2 text-[13px] leading-5 text-gray-700 bg-white border border-emerald-100 rounded-lg p-3">
-                                                    {s.description}
-                                                </div>
-                                            )}
+                                        )}
+
+                                        {/* 하단 메타 정보 (데이터 기반) */}
+                                        <div className="mt-2 text-[12px] text-gray-500">
+                                            {s.type}
+                                            {s.type && s.address ? " · " : ""}
+                                            {s.address}
                                         </div>
                                     </div>
                                 </div>
                             );
                         })}
                     </div>
+
+
                 </div>
             </div>
         </div>
@@ -123,9 +183,7 @@ export default function MapView() {
             return passed;
         }
         try {
-            const saved = JSON.parse(
-                sessionStorage.getItem("chatbot.map.content") || "null"
-            );
+            const saved = JSON.parse(sessionStorage.getItem("chatbot.map.content") || "null");
             return Array.isArray(saved) ? saved : [];
         } catch {
             return [];
@@ -236,8 +294,7 @@ export default function MapView() {
 
     /* ----- 네비 핸들러 ----- */
     const prevDay = () => setSelectedIdx((i) => Math.max(0, i - 1));
-    const nextDay = () =>
-        setSelectedIdx((i) => Math.min(days.length - 1, i + 1));
+    const nextDay = () => setSelectedIdx((i) => Math.min(days.length - 1, i + 1));
 
     const currentDayLabel =
         days[selectedIdx]?.day ?? (Number.isFinite(selectedIdx) ? selectedIdx + 1 : 1);
@@ -253,18 +310,8 @@ export default function MapView() {
                         aria-label="뒤로"
                         onClick={() => nav(-1)}
                     >
-                        <svg
-                            className="w-6 h-6 text-gray-700"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                        >
-                            <path
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M15.75 19.5 8.25 12l7.5-7.5"
-                            />
+                        <svg className="w-6 h-6 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
                         </svg>
                     </button>
                     <h1 className="absolute left-1/2 -translate-x-1/2 text-sm font-semibold text-gray-900">
@@ -273,70 +320,49 @@ export default function MapView() {
                 </div>
             </header>
 
-            {/* 지도 */}
+            {/* 지도(하단 스텝퍼 위까지 크게) */}
             <div className="relative">
-                <div ref={mapRef} className="w-full h-[min(65svh,520px)] bg-gray-100" />
-                {/* 지도 바로 아래 겹치는 느낌을 주기 위해 살짝 끌어올림 */}
-                <div className="-mt-6" />
+                <div
+                    ref={mapRef}
+                    className="w-full bg-gray-100"
+                    style={{ height: "calc(100svh - 182px)" }} // 헤더(48) + 스텝퍼(약 120~130) 고려
+                />
             </div>
 
-            {/* Day Stepper (디자인 시안 스타일) */}
-            <div className="w-full max-w-[420px] mx-auto px-4">
-                <div className="pointer-events-auto rounded-2xl bg-white border border-gray-100 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
-                    {/* 검은 핸들: 탭하면 상세 */}
-                    <button
-                        onClick={() => setShowDetail(true)}
-                        className="w-full grid place-items-center pt-3"
-                        aria-label="상세 보기"
-                    >
-                        <span className="block w-24 h-[6px] rounded-full bg-neutral-800" />
-                    </button>
-
-                    <div className="px-5 py-3 flex items-center justify-center gap-6">
-                        {/* 이전(연한 초록 테두리의 완전 원형) */}
+            {/* 하단 고정 Day Stepper */}
+            <div className="fixed inset-x-0 bottom-0 z-20">
+                <div className="w-full max-w-[420px] mx-auto px-4 pb-[env(safe-area-inset-bottom,0px)]">
+                    <div className="pointer-events-auto rounded-2xl bg-white border border-gray-100 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+                        {/* 검은 핸들: 탭하면 상세 열기 */}
                         <button
-                            type="button"
-                            onClick={prevDay}
-                            disabled={selectedIdx === 0}
-                            className={`w-10 h-10 rounded-full grid place-items-center border text-[18px] leading-none transition active:scale-95
-                ${
-                                selectedIdx === 0
-                                    ? "border-emerald-100 text-emerald-200 cursor-not-allowed bg-white"
-                                    : "border-emerald-400 text-emerald-500 hover:bg-emerald-50"
-                            }`}
-                            aria-label="이전 일차"
+                            onClick={() => setShowDetail(true)}
+                            className="w-full grid place-items-center pt-3"
+                            aria-label="상세 보기"
                         >
-                            {/* div 문자를 사용해 정확한 원형/정렬 */}
-                            <div className="translate-y-[-1px]">‹</div>
+                            <span className="block w-24 h-[6px] rounded-full bg-neutral-800" />
                         </button>
 
-                        {/* 중앙 레이블 */}
-                        <div className="min-w-[72px] text-center text-[18px] font-extrabold text-gray-900">
-                            {currentDayLabel}일차
+                        <div className="px-5 py-3 flex items-center justify-center gap-3">
+                            <RoundBtn kind="outline" label="‹" onClick={prevDay} disabled={selectedIdx===0} />
+                            <div className="min-w-[72px] text-center text-[18px] font-extrabold text-gray-900">
+                                {currentDayLabel}일차
+                            </div>
+                            <RoundBtn kind="solid" label="›" onClick={nextDay} disabled={selectedIdx===days.length-1} />
                         </div>
-
-                        {/* 다음(진녹색 가득 찬 완전 원형) */}
-                        <button
-                            type="button"
-                            onClick={nextDay}
-                            disabled={selectedIdx === days.length - 1}
-                            className={`w-10 h-10 rounded-full grid place-items-center text-[18px] leading-none transition active:scale-95
-                ${
-                                selectedIdx === days.length - 1
-                                    ? "bg-emerald-100 text-white cursor-not-allowed"
-                                    : "bg-emerald-500 text-white hover:brightness-95"
-                            }`}
-                            aria-label="다음 일차"
-                        >
-                            <div className="translate-y-[-1px]">›</div>
-                        </button>
                     </div>
                 </div>
             </div>
 
             {/* 상세 시트 */}
             {showDetail && day && (
-                <DetailSheet day={day} onClose={() => setShowDetail(false)} />
+                <DetailSheet
+                    day={day}
+                    selectedIdx={selectedIdx}
+                    daysLen={days.length}
+                    onPrev={prevDay}
+                    onNext={nextDay}
+                    onClose={() => setShowDetail(false)}
+                />
             )}
         </div>
     );

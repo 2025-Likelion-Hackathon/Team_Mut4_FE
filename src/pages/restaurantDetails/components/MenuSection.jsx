@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { useRestaurantDetailsStore } from '../../../stores/useRestaurantDetailsStore';
 
 const MenuContainer = styled.div`
   padding: 1.5rem;
@@ -13,7 +14,7 @@ const SectionTitle = styled.h2`
 const MenuList = styled.ul`
   list-style: none;
   border-radius: 12px;
-  padding: 10px 20px;
+  padding: 10px 50px;
   background-color: #f9f9f9;
 `;
 const MenuItem = styled.li`

@@ -59,7 +59,7 @@ export default function GugunStep({ sido, onBack, onComplete, saving }) {
             </div>
 
             {/* 하단 고정 버튼 */}
-            <div className="fixed inset-x-0 bottom-0 mx-auto max-w-md bg-white/95 backdrop-blur border-t p-3">
+            <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[420px] bg-white/95 backdrop-blur border-t p-3">
                 <button
                     disabled={!picked || saving}
                     onClick={() => onComplete(picked)}

@@ -54,7 +54,7 @@ const AccommodationDetailsPage = () => {
 
   return (
     <Container>
-      <RestaurantDetailsHeader title={accommodation.name} />
+      <RestaurantDetailsHeader title={accommodation.name} type="accommodation" />
       <InfoSection />
       <LocationSection 
         name={accommodation.name}

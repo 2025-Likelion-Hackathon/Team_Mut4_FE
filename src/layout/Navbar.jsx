@@ -9,10 +9,10 @@ const Navbar = () => {
 
   // 현재 경로가 해당 메뉴와 일치하는지 확인하는 함수
   const isActive = (path) => {
-    if (path === "/restaurant") {
-      // /restaurant로 시작하는 모든 경로를 활성화
-      return location.pathname.startsWith("/restaurant");
-    }
+    // if (path === "/restaurant") {
+    //   // /restaurant로 시작하는 모든 경로를 활성화
+    //   return location.pathname.startsWith("/restaurant");
+    // }
     return location.pathname === path;
   };
 
@@ -25,7 +25,9 @@ const Navbar = () => {
     <div className="h-16 bg-[#ffffff] flex items-center justify-around text-sm shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
       {/* Nav Item 1 - 홈 */}
       <div className="flex flex-col items-center">
-        <Home className={getIconClass("/main")} />
+        <Link to="/main">
+          <Home className={getIconClass("/main")} />
+        </Link>
         <Link to="/main" className={getTextColor("/main")}>
           홈
         </Link>
@@ -33,7 +35,9 @@ const Navbar = () => {
 
       {/* Nav Item 2 - AI 가이드 */}
       <div className="flex flex-col items-center">
-        <Guide className={getIconClass("/chatbot")} />
+        <Link to="/chatbot">
+          <Guide className={getIconClass("/chatbot")} />
+        </Link>
         <Link to="/chatbot" className={getTextColor("/chatbot")}>
           AI 가이드
         </Link>
@@ -41,7 +45,9 @@ const Navbar = () => {
 
       {/* Nav Item 3 - 현지인추천 */}
       <div className="flex flex-col items-center">
-        <Map className={getIconClass("/restaurant")} />
+        <Link to="/restaurant">
+          <Map className={getIconClass("/restaurant")} />
+        </Link>
         <Link to="/restaurant" className={getTextColor("/restaurant")}>
           현지인추천
         </Link>

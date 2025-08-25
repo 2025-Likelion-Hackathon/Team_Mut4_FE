@@ -24,6 +24,7 @@ function Layout() {
       <div className="w-full h-[64px]">
         {path === "/destination" ||
         path === "/chatbot" ||
+        path === "/chatbot/map" ||
         path === "/accommodation" ? null : (
           <Navbar />
         )}

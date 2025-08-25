@@ -15,12 +15,12 @@ const AIChatbotPage = lazy(() => import("../pages/chatbot"));
 const AIChatbotHistoryPage = lazy(
   () => import("../pages/chatbot/chatHistory.jsx")
 );
-// const RestaurantPage = lazy(() => import("../pages/restaurant"));
-const ListPage = lazy(() => import("../pages/list/ListPage.jsx"));
+const RestaurantPage = lazy(() => import("../pages/restaurant/Restaurant.jsx"));
 const RestaurantDetailsPage = lazy(() => import("../pages/restaurantDetails"));
 const ReviewWritePage = lazy(() => import("../pages/restaurantDetails/ReviewWritePage"));
-// const AccommodationPage = lazy(() => import("../pages/accommodation"));
-const AccommodationDetailsPage = lazy(() => import("../pages/AccommodationDetails"))
+const AccommodationPage = lazy(() => import("../pages/accommodation/Accommodation.jsx"));
+const AccommodationDetailsPage = lazy(() => import("../pages/AccommodationDetails"));
+const SearchPage = lazy(() => import("../pages/search/Search.jsx"));
 
 const router = createBrowserRouter([
   // Initial Flow Routes (without common Layout for these specific steps)
@@ -76,7 +76,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/restaurant",
-        element: <ListPage />,
+        element: <RestaurantPage />,
       },
       {
         path: "/restaurant/:id",
@@ -88,11 +88,15 @@ const router = createBrowserRouter([
       },
       {
         path: "/accommodation",
-        element: <ListPage />,
+        element: <AccommodationPage />,
       },
       {
         path: "/accommodation/:id",
         element: <AccommodationDetailsPage />,
+      },
+      {
+        path: "/search",
+        element: <SearchPage />,
       },
     ],
   },

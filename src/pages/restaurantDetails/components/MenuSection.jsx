@@ -13,7 +13,7 @@ const SectionTitle = styled.h2`
 const MenuList = styled.ul`
   list-style: none;
   border-radius: 12px;
-  padding: 10px 50px;
+  padding: 10px 20px;
   background-color: #f9f9f9;
 `;
 const MenuItem = styled.li`

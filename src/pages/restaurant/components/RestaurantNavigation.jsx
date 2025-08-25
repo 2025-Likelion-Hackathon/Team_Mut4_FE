@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { useMoreTabStore } from '../../../stores/useMoreTabStore';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const NavContainer = styled.div`
   display: flex;
@@ -12,6 +12,7 @@ const NavContainer = styled.div`
 const NavButton = styled.button`
   flex: 1;
   padding: 1rem;
+  border-radius: 0;
   border-bottom: ${props => props.active ? '3px solid #34d399' : 'none'};
   font-weight: ${props => props.active ? '600' : 'normal'};
   color: ${props => props.active ? '#34d399' : '#6b7280'};
@@ -25,19 +26,20 @@ const NavButton = styled.button`
 `;
 
 const RestaurantNavigation = () => {
-  const { activeTab, setActiveTab } = useMoreTabStore();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <NavContainer>
       <NavButton
-        active={activeTab === 'restaurant'}
-        onClick={() => setActiveTab('restaurant')}
+        active={location.pathname.startsWith('/restaurant')}
+        onClick={() => navigate('/restaurant')}
       >
         음식점
       </NavButton>
       <NavButton
-        active={activeTab === 'accommodation'}
-        onClick={() => setActiveTab('accommodation')}
+        active={location.pathname.startsWith('/accommodation')}
+        onClick={() => navigate('/accommodation')}
       >
         숙소
       </NavButton>

@@ -6,6 +6,43 @@ export const useRestaurantListStore = create((set) => ({
   isLoading: true,
   error: null,
 
+  searchRestaurants: async (locationId, keyword) => {
+    set({ isLoading: true, error: null });
+    try {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL;
+      const response = await axios.get(`${baseUrl}/locations/${locationId}/search`, {
+        params: {
+          keyword: keyword,
+          radius: 2000,
+        },
+      });
+
+      const mappedRestaurants = response.data.map(item => ({
+        id: item.id,
+        name: item.placeName,
+        placeName: item.placeName,
+        address: item.addressName,
+        addressName: item.addressName,
+        roadAddress: item.roadAddressName,
+        roadAddressName: item.roadAddressName,
+        phone: item.phone,
+        placeUrl: item.placeUrl,
+        latitude: item.latitude,
+        longitude: item.longitude,
+        categoryName: item.categoryName,
+        averageGrade: item.averageGrade,
+        restaurantPrice: item.averagePrice,
+        priceDifference: item.priceDifference,
+        foodAveragePrice: item.averagePrice + item.priceDifference,
+      }));
+
+      set({ restaurants: mappedRestaurants, isLoading: false });
+    } catch (error) {
+      console.error("Search failed:", error);
+      set({ error: '검색에 실패했습니다.', isLoading: false, restaurants: [] });
+    }
+  },
+
   fetchRestaurants: async (locationId, filter = '거리순') => {
     if (!locationId) {
       return set({ restaurants: [], isLoading: false });

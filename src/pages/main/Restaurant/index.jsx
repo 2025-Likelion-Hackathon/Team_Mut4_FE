@@ -56,7 +56,6 @@ const index = () => {
         content={placeContent}
         link="/restaurant"
         onBookmark={handleFoodBookmark}
-        place="restaurant"
       />
     </div>
   );

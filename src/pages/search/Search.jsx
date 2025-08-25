@@ -15,6 +15,7 @@ import AccommodationItem from '../accommodation/components/AccommodationItem';
 
 const PageContainer = styled.div`
   position: relative;
+  height: 100%;
   max-width: 600px;
   margin: 0 auto;
   background-color: #fff;
@@ -74,11 +75,24 @@ const SearchPage = () => {
     performSingleSearch();
   }, [keyword, locationId]);
   
-  const handleBookmarkChange = (id, type) => {
-    if (type === 'restaurant') {
-      toggleRestaurantBookmark(id);
-    } else if (type === 'accommodation') {
-      toggleAccBookmark(id);
+  // --- handleBookmarkChange 함수 수정 ---
+  const handleBookmarkChange = (itemId, itemType) => {
+    // 1. 먼저 SearchPage의 로컬 상태(combinedResults)를 즉시 업데이트하여 UI를 변경합니다.
+    setCombinedResults(prevResults =>
+      prevResults.map(item => {
+        if (item.id === itemId && item.resultType === itemType) {
+          // isBookmarked 상태를 반전시킵니다.
+          return { ...item, isBookmarked: !item.isBookmarked };
+        }
+        return item;
+      })
+    );
+
+    // 2. 그 다음, 전역 스토어의 상태를 업데이트하여 변경사항을 동기화합니다.
+    if (itemType === 'restaurant') {
+      toggleRestaurantBookmark(itemId);
+    } else if (itemType === 'accommodation') {
+      toggleAccBookmark(itemId);
     }
   };
 
@@ -94,13 +108,14 @@ const SearchPage = () => {
               <RestaurantItem 
                 key={`restaurant-${item.id}`} 
                 restaurant={item} 
-                onBookmarkChange={(id) => handleBookmarkChange(id, 'restaurant')}
+                // onBookmarkChange가 호출될 때 item의 id와 type을 전달합니다.
+                onBookmarkChange={() => handleBookmarkChange(item.id, 'restaurant')}
               />
             ) : (
               <AccommodationItem 
                 key={`accommodation-${item.id}`} 
                 accommodation={item} 
-                onBookmarkChange={(id) => handleBookmarkChange(id, 'accommodation')}
+                onBookmarkChange={() => handleBookmarkChange(item.id, 'accommodation')}
               />
             )
           )
